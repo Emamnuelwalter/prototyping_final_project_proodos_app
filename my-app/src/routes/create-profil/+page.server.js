@@ -19,6 +19,8 @@ export const actions = {
         { sport: data.get("sport2"), level: data.get("level2") },
         { sport: data.get("sport3"), level: data.get("level3") },
       ],
+      gender: data.get("gender"),
+      goal: data.get("goal")
     };
 
     if (
@@ -28,6 +30,7 @@ export const actions = {
       !user.email ||
       !user.phone ||
       !user.canton ||
+      !user.gender||
       !user.municipality
     ) {
       return fail(400, {

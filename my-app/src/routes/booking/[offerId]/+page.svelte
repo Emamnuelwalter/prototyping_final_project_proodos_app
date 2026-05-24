@@ -3,6 +3,17 @@
   import TimeSlotSelect from "$lib/components/booking/TimeSlotSelect.svelte";
   import LocationSelect from "$lib/components/booking/LocationSelect.svelte";
   import BookingSummary from "$lib/components/booking/BookingSummary.svelte";
+  import RequestLocation from "$lib/components/booking/RequestLocation.svelte";
+
+  let useCustomLocation = $state(false);
+
+  let requestedLocation = $state({
+    name: "",
+    street: "",
+    postalCode: "",
+    municipality: "",
+    note: "",
+  });
 
   let { data, form } = $props();
 
@@ -54,32 +65,60 @@
       <input
         type="hidden"
         name="startTime"
-        value={selectedTime.split("-")[0]}
+        value={selectedTime ? selectedTime.split("-")[0] : ""}
       />
-      <input type="hidden" name="endTime" value={selectedTime.split("-")[1]} />
+      <input
+        type="hidden"
+        name="endTime"
+        value={selectedTime ? selectedTime.split("-")[1] : ""}
+      />
 
-      <DateSelect {dates} bind:selectedDate />
+      <div class="row g-4">
+        <div class="col-lg-8">
+          <div class="booking-card mb-4">
+            <DateSelect {dates} bind:selectedDate />
+          </div>
 
-      {#if selectedDate}
-        <TimeSlotSelect {times} bind:selectedTime />
-      {/if}
+          {#if selectedDate}
+            <div class="booking-card mb-4">
+              <TimeSlotSelect {times} bind:selectedTime />
+            </div>
+          {/if}
 
-      <LocationSelect location={offer.location} />
+          <div class="booking-card mb-4">
+            <LocationSelect location={offer.location} />
 
-      <BookingSummary {offer} {selectedDate} {selectedTime} />
+            <div class="mt-4">
+              <RequestLocation bind:useCustomLocation bind:requestedLocation />
+            </div>
+          </div>
+        </div>
 
-      <div class="d-flex justify-content-between">
-        <a href={"/offers/"+offer._id} class="btn btn-outline-primary">
-          Zurück
-        </a>
+        <div class="col-lg-4">
+          <div class="summary-sticky">
+            <BookingSummary
+              {offer}
+              {selectedDate}
+              {selectedTime}
+              {useCustomLocation}
+              {requestedLocation}
+            />
 
-        <button
-          type="submit"
-          class="btn btn-primary"
-          disabled={!selectedDate || !selectedTime}
-        >
-          Buchung abschliessen
-        </button>
+            <div class="d-grid gap-2 mt-4">
+              <button
+                type="submit"
+                class="btn btn-primary"
+                disabled={!selectedDate || !selectedTime}
+              >
+                Buchung abschliessen
+              </button>
+
+              <a href={"/offers/" + offer._id} class="btn btn-outline-primary">
+                Zurück
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
     </form>
   {:else}

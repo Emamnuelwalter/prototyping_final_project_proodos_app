@@ -177,6 +177,31 @@ async function getOffer(id) {
   endTime: "11:00"
 }
 */
+async function createBookingNumber() {
+  const year = new Date().getFullYear();
+  const prefix = `BKG-${year}-`;
+
+  const bookingsCollection = db.collection("bookings");
+
+  const lastBooking = await bookingsCollection
+    .find({
+      bookingNumber: { $regex: `^${prefix}` },
+    })
+    .sort({
+      bookingNumber: -1,
+    })
+    .limit(1)
+    .toArray();
+
+  let nextNumber = 1;
+
+  if (lastBooking.length > 0) {
+    const lastNumber = lastBooking[0].bookingNumber.split("-")[2];
+    nextNumber = Number(lastNumber) + 1;
+  }
+
+  return prefix + String(nextNumber).padStart(4, "0");
+}
 async function createBooking(booking) {
   try {
     const offersCollection = db.collection("trainingOffers");
@@ -188,18 +213,45 @@ async function createBooking(booking) {
       console.log("No offer with id " + booking.offerId);
       return null;
     }
+    async function createBookingNumber() {
+      const year = new Date().getFullYear();
+      const prefix = `BKG-${year}-`;
+
+      const bookingsCollection = db.collection("bookings");
+
+      const lastBooking = await bookingsCollection
+        .find({
+          bookingNumber: { $regex: `^${prefix}` },
+        })
+        .sort({
+          bookingNumber: -1,
+        })
+        .limit(1)
+        .toArray();
+
+      let nextNumber = 1;
+
+      if (lastBooking.length > 0) {
+        const lastNumber = lastBooking[0].bookingNumber.split("-")[2];
+        nextNumber = Number(lastNumber) + 1;
+      }
+
+      return prefix + String(nextNumber).padStart(4, "0");
+    }
+    const bookingNumber = await createBookingNumber();
 
     const newBooking = {
+      bookingNumber: bookingNumber,
       customerId: booking.customerId,
       trainerId: offer.trainerId,
       offerId: booking.offerId,
       locationId: booking.locationId || offer.locationId,
-      requestedLocation: null,
+      requestedLocation: booking.requestedLocation || null,
       date: booking.date,
       startTime: booking.startTime,
       endTime: booking.endTime,
       repeat: booking.repeat || "none",
-      status: "confirmed", // Mindestumfang: direkt bestätigt
+      status: "confirmed",
       price: offer.pricePerHour,
       currency: offer.currency,
       createdAt: new Date().toISOString(),
@@ -261,23 +313,25 @@ async function getBookingsByUser(userId) {
   try {
     const collection = db.collection("bookings");
 
-    bookings = await collection.find({
-      customerId: userId
-    }).toArray();
+    bookings = await collection
+      .find({
+        customerId: userId,
+      })
+      .toArray();
 
     for (const booking of bookings) {
       convertId(booking);
 
       const offer = await db.collection("trainingOffers").findOne({
-        _id: booking.offerId
+        _id: booking.offerId,
       });
 
       const trainer = await db.collection("users").findOne({
-        _id: booking.trainerId
+        _id: booking.trainerId,
       });
 
       const location = await db.collection("trainingLocations").findOne({
-        _id: booking.locationId
+        _id: booking.locationId,
       });
 
       booking.offer = offer;
@@ -398,20 +452,268 @@ async function deleteBooking(bookingId, userId) {
 
   return null;
 }
-// Export
+
+async function getReviewsByOffer(offerId) {
+  const collection = db.collection("reviews");
+
+  const reviews = await collection
+    .find({ offerId: offerId })
+    .sort({ createdAt: -1 })
+    .toArray();
+
+  return reviews.map((review) => ({
+    ...review,
+    _id: review._id.toString(),
+  }));
+}
+
+async function updateOfferRating(offerId) {
+  const reviewsCollection = db.collection("reviews");
+  const trainingOffersCollection = db.collection("trainingOffers");
+
+  const reviews = await reviewsCollection.find({ offerId: offerId }).toArray();
+
+  const reviewCount = reviews.length;
+
+  let averageRating = 0;
+
+  if (reviewCount > 0) {
+    const totalRating = reviews.reduce((sum, review) => {
+      return sum + Number(review.rating);
+    }, 0);
+
+    averageRating = totalRating / reviewCount;
+  }
+
+  await trainingOffersCollection.updateOne(
+    { _id: offerId },
+    {
+      $set: {
+        averageRating: Number(averageRating.toFixed(1)),
+        reviewCount: reviewCount,
+      },
+    },
+  );
+}
+
+async function createReview(review) {
+  const collection = db.collection("reviews");
+
+  await collection.insertOne(review);
+
+  await updateOfferRating(review.offerId);
+}
+
+async function deleteReview(reviewId) {
+  const collection = db.collection("reviews");
+
+  const review = await collection.findOne({ id: reviewId });
+
+  if (!review) {
+    return;
+  }
+
+  await collection.deleteOne({ id: reviewId });
+
+  await updateOfferRating(review.offerId);
+}
+
+async function getFreeTimesByOffer(offerId, currentBookingId) {
+  const offersCollection = db.collection("trainingOffers");
+  const bookingsCollection = db.collection("bookings");
+
+  const offer = await offersCollection.findOne({ _id: offerId });
+
+  if (!offer || !offer.availableTimes) {
+    return [];
+  }
+
+  const bookings = await bookingsCollection
+    .find({
+      offerId: offerId,
+      status: { $ne: "cancelled" },
+    })
+    .toArray();
+
+  const blockedSlots = bookings
+    .filter((booking) => booking._id !== currentBookingId)
+    .map((booking) => {
+      return `${booking.date}_${booking.startTime}_${booking.endTime}`;
+    });
+
+  const freeTimes = offer.availableTimes.filter((time) => {
+    const slotKey = `${time.date}_${time.startTime}_${time.endTime}`;
+
+    return !blockedSlots.includes(slotKey);
+  });
+
+  return freeTimes;
+}
+
+async function rescheduleBooking(
+  bookingId,
+  userId,
+  newDate,
+  newStartTime,
+  newEndTime,
+) {
+  try {
+    const collection = db.collection("bookings");
+
+    const result = await collection.updateOne(
+      {
+        ...createIdQuery(bookingId),
+        customerId: userId,
+      },
+      {
+        $set: {
+          date: newDate,
+          startTime: newStartTime,
+          endTime: newEndTime,
+          status: "rescheduled",
+          updatedAt: new Date().toISOString(),
+        },
+      },
+    );
+
+    console.log("Reschedule result:", result);
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+async function updateUser(userId, updatedUser) {
+  try {
+    const collection = db.collection("users");
+
+    await collection.updateOne(createIdQuery(userId), {
+      $set: {
+        firstname: updatedUser.firstname,
+        lastname: updatedUser.lastname,
+        birthday: updatedUser.birthday,
+        email: updatedUser.email,
+        phone: updatedUser.phone,
+        canton: updatedUser.canton,
+        municipality: updatedUser.municipality,
+        interestedSports: updatedUser.interestedSports,
+        gender: updatedUser.gender,
+        goal: updatedUser.goal,
+        updatedAt: new Date().toISOString(),
+      },
+    });
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+async function toggleFavorite(userId, offerId) {
+  try {
+    const collection = db.collection("favorites");
+
+    const existingFavorite = await collection.findOne({
+      userId: userId,
+      offerId: offerId,
+    });
+
+    if (existingFavorite) {
+      await collection.deleteOne({
+        userId: userId,
+        offerId: offerId,
+      });
+
+      return false;
+    } else {
+      await collection.insertOne({
+        userId: userId,
+        offerId: offerId,
+        createdAt: new Date().toISOString(),
+      });
+
+      return true;
+    }
+  } catch (error) {
+    console.log("Fehler in toggleFavorite:", error);
+    return null;
+  }
+}
+
+async function getFavoriteOfferIds(userId) {
+  let favorites = [];
+
+  try {
+    favorites = await db
+      .collection("favorites")
+      .find({ userId: userId })
+      .toArray();
+  } catch (error) {
+    console.log(error.message);
+  }
+
+  return favorites.map((favorite) => favorite.offerId);
+}
+
+async function getFavoriteOffersByUser(userId) {
+  try {
+    const favorites = await db
+      .collection("favorites")
+      .find({ userId: userId })
+      .toArray();
+
+    const favoriteOfferIds = favorites.map((favorite) => favorite.offerId);
+
+    if (favoriteOfferIds.length === 0) {
+      return [];
+    }
+
+    const offers = await getOffers();
+
+    const favoriteOffers = offers
+      .filter((offer) => favoriteOfferIds.includes(offer._id))
+      .map((offer) => {
+        return {
+          ...offer,
+          isFavorite: true,
+        };
+      });
+
+    return favoriteOffers;
+  } catch (error) {
+    console.log("Fehler in getFavoriteOffersByUser:", error);
+  }
+
+  return [];
+}
 
 export default {
+  getFavoriteOfferIds,
+  toggleFavorite,
+  getFavoriteOffersByUser,
+
+  updateUser,
+  getFreeTimesByOffer,
+  rescheduleBooking,
+  getReviewsByOffer,
+  updateOfferRating,
+
+  deleteReview,
+  createReview,
+  getReviewsByOffer,
+
   getUser,
   createUser,
   getSports,
+  deleteUser,
+
   getOffers,
   getOffer,
-  deleteUser,
+
   deleteBooking,
   createBooking,
+  createBookingNumber,
   getBooking,
   getBookingsByOffer,
   getBookingsByUser,
+
   getTrainingLocations,
   getTrainingLocationsBySport,
 };

@@ -25,6 +25,7 @@
             Durchsuchen
           </a>
           <a class="nav-link active" href="/categories">Sportkategorien</a>
+          <a class="nav-link active" href="/favorites">Favoriten</a>
           <a class="nav-link active" href="/appointments">Meine Termine</a>
           <a class="nav-link active" href="/profil">Mein Profil</a>
         </div>

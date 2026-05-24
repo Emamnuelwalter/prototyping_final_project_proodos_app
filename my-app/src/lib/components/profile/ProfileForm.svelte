@@ -24,7 +24,11 @@
 
 <div class="create-profil-form mx-auto">
   <h3>Profil erstellen</h3>
-  <p>Hinweis: Dies ist ein Prototyp. Bitte verwenden Sie keine echten Personendaten. Die eingegebenen Daten werden nur zur Simulation des Buchungsprozesses gespeichert.</p>
+  <p>
+    Hinweis: Dies ist ein Prototyp. Bitte verwenden Sie keine echten
+    Personendaten. Die eingegebenen Daten werden nur zur Simulation des
+    Buchungsprozesses gespeichert.
+  </p>
   <hr />
   {#if form?.message}
     <div class="alert alert-danger">
@@ -32,19 +36,34 @@
     </div>
   {/if}
   <form method="POST" action="?/create">
+    <div class="col-md-6 mb-3">
+      <label for="gender" class="form-label">Geschlecht</label>
+      <select id="gender" name="gender" class="form-select" required>
+        <option value="">Bitte auswählen</option>
+        <option value="Männlich">Männlich</option>
+        <option value="Weiblich">Weiblich</option>
+        <option value="Divers">Divers</option>
+      </select>
+    </div>
     <div class="row">
       <div class="mb-3 col-md-6">
-        <label for="name" class="form-label">Vorname <span class=required>*</span></label>
+        <label for="name" class="form-label"
+          >Vorname <span class="required">*</span></label
+        >
         <input name="firstname" class="form-control" type="text" required />
       </div>
       <div class="mb-3 col-md-6">
-        <label for="lastname" class="form-label">Nachname <span class=required>*</span> </label>
+        <label for="lastname" class="form-label"
+          >Nachname <span class="required">*</span>
+        </label>
         <input name="lastname" class="form-control" type="text" required />
       </div>
     </div>
     <div class="row">
       <div class="mb-3 col-md-6">
-        <label for="birthday" class="form-label">Geburtsdatum <span class=required>*</span></label>
+        <label for="birthday" class="form-label"
+          >Geburtsdatum <span class="required">*</span></label
+        >
         <input
           id="birthday"
           name="birthday"
@@ -54,17 +73,23 @@
         />
       </div>
       <div class="mb-3 col-md-6">
-        <label for="phone" class="form-label">Telefonnummer <span class=required>*</span></label>
+        <label for="phone" class="form-label"
+          >Telefonnummer <span class="required">*</span></label
+        >
         <input name="phone" class="form-control" type="tel" required />
       </div>
     </div>
     <div class="mb-3 col-md-6">
-      <label for="email" class="form-label">E-Mail <span class=required>*</span></label>
+      <label for="email" class="form-label"
+        >E-Mail <span class="required">*</span></label
+      >
       <input name="email" class="form-control" type="email" required />
     </div>
     <div class="row">
       <div class="mb-3 col-md-6">
-        <label for="canton" class="form-label">Kanton <span class=required>*</span></label>
+        <label for="canton" class="form-label"
+          >Kanton <span class="required">*</span></label
+        >
         <select
           id="canton"
           name="canton"
@@ -82,7 +107,9 @@
       </div>
 
       <div class="mb-3 col-md-6">
-        <label for="municipality" class="form-label">Gemeinde <span class=required>*</span></label>
+        <label for="municipality" class="form-label"
+          >Gemeinde <span class="required">*</span></label
+        >
         <select
           id="municipality"
           name="municipality"
@@ -102,6 +129,16 @@
     <div class="mb-4">
       <SportInterestSelect bind:interestedSports />
     </div>
+    <div class="col-12 mb-3">
+      <label for="goal" class="form-label">Mein Ziel</label>
+      <textarea
+        id="goal"
+        name="goal"
+        class="form-control"
+        rows="4"
+        placeholder="Beschreibe kurz dein persönliches Trainingsziel..."
+      ></textarea>
+    </div>
     <div class="d-flex justify-content-end mt-4">
       <button type="submit" class="btn btn-primary px-4">
         Profil erstellen
@@ -111,7 +148,7 @@
 </div>
 
 <style>
- .required {
+  .required {
     color: red;
   }
 

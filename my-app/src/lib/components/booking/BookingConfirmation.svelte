@@ -4,7 +4,7 @@
   let trainerName = $derived(
     (booking.trainer?.firstname || booking.trainer?.firstName || "") +
       " " +
-      (booking.trainer?.lastname || booking.trainer?.lastName || "")
+      (booking.trainer?.lastname || booking.trainer?.lastName || ""),
   );
 </script>
 
@@ -20,16 +20,16 @@
       Termin: {booking.date} - {booking.startTime} - {booking.endTime}
     </p>
 
-    <p>Buchungs-ID: {booking._id}</p>
+    {#if booking.bookingNumber}
+      <p>Buchungsnummer: {booking.bookingNumber}</p>
+    {/if}
 
     <div class="d-flex justify-content-center gap-3 mt-5">
       <a href="/offers" class="btn btn-outline-primary">
         Zurück zur Startseite
       </a>
 
-      <a href="/appointments" class="btn btn-primary">
-        Meine Termine
-      </a>
+      <a href="/appointments" class="btn btn-primary"> Meine Termine </a>
     </div>
   {:else}
     <p>Keine Buchung gefunden.</p>

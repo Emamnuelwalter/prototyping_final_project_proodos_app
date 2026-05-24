@@ -1,25 +1,20 @@
+import { redirect } from "@sveltejs/kit";
 import db from "$lib/db.js";
 
-export async function load({ params, cookies }) {
+export async function load({ cookies }) {
   const userId = cookies.get("userId");
-  const sport = decodeURIComponent(params.sport);
 
-  const offers = await db.getOffers(sport);
+  if (!userId) {
+    throw redirect(303, "/create-profil");
+  }
 
-  const favoriteOfferIds = userId ? await db.getFavoriteOfferIds(userId) : [];
-
-  const offersWithFavorites = offers.map((offer) => {
-    return {
-      ...offer,
-      isFavorite: favoriteOfferIds.includes(offer._id),
-    };
-  });
+  const offers = await db.getFavoriteOffersByUser(userId);
 
   return {
-    sport,
-    offers: offersWithFavorites,
+    offers,
   };
 }
+
 
 export const actions = {
   toggleFavorite: async ({ request, cookies }) => {

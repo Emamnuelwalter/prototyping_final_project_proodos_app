@@ -1,5 +1,25 @@
 <script>
-  let { offer, selectedDate = "", selectedTime = "" } = $props();
+  let {
+    offer,
+    selectedDate = "",
+    selectedTime = "",
+    useCustomLocation = false,
+    requestedLocation = null
+  } = $props();
+
+  let defaultLocation = $derived(offer.location);
+
+  let locationName = $derived(
+    useCustomLocation
+      ? requestedLocation?.name || "Wunschstandort noch nicht angegeben"
+      : defaultLocation?.name || "Standort offen"
+  );
+
+  let locationDetails = $derived(
+    useCustomLocation
+      ? `${requestedLocation?.street || ""}, ${requestedLocation?.postalCode || ""} ${requestedLocation?.municipality || ""}`
+      : `${defaultLocation?.address?.street || ""}, ${defaultLocation?.address?.postalCode || ""} ${defaultLocation?.address?.municipality || ""}`
+  );
 </script>
 
 <div class="border rounded p-3 mb-4">
@@ -8,6 +28,20 @@
   <p class="mb-1">
     <strong>Angebot:</strong> {offer.title}
   </p>
+
+  <p class="mb-1">
+    <strong>Standort:</strong> {locationName}
+  </p>
+
+  <p class="mb-1 text-muted">
+    {locationDetails}
+  </p>
+
+  {#if useCustomLocation && requestedLocation?.note}
+    <p class="mb-1 text-muted">
+      <strong>Bemerkung:</strong> {requestedLocation.note}
+    </p>
+  {/if}
 
   <p class="mb-1">
     <strong>Datum:</strong> {selectedDate || "Noch nicht ausgewählt"}
