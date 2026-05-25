@@ -453,6 +453,21 @@ async function deleteBooking(bookingId, userId) {
   return null;
 }
 
+async function deleteBookingSeries(repeatGroupId, userId) {
+  try {
+    const collection = db.collection("bookings");
+
+    const result = await collection.deleteMany({
+      repeatGroupId: repeatGroupId,
+      customerId: userId,
+    });
+
+    console.log("Delete booking series result:", result);
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
 async function getReviewsByOffer(offerId) {
   const collection = db.collection("reviews");
 
@@ -684,6 +699,90 @@ async function getFavoriteOffersByUser(userId) {
   return [];
 }
 
+async function createRecurringBookingRequest(
+  booking,
+  repeatWeeks,
+  repeatMessage,
+) {
+  try {
+    const offersCollection = db.collection("trainingOffers");
+    const offer = await offersCollection.findOne(
+      createIdQuery(booking.offerId),
+    );
+
+    if (!offer) {
+      console.log("No offer with id " + booking.offerId);
+      return null;
+    }
+
+    const bookingsCollection = db.collection("bookings");
+    const repeatGroupId = crypto.randomUUID();
+
+    const createdBookings = [];
+
+    for (let i = 0; i < repeatWeeks; i++) {
+      const bookingDate = new Date(booking.date);
+      bookingDate.setDate(bookingDate.getDate() + i * 7);
+
+      const dateString = bookingDate.toISOString().split("T")[0];
+
+      const bookingNumber = await createBookingNumber();
+
+      const newBooking = {
+        bookingNumber: bookingNumber,
+        repeatGroupId: repeatGroupId,
+        customerId: booking.customerId,
+        trainerId: offer.trainerId,
+        offerId: booking.offerId,
+        locationId: booking.locationId || offer.locationId,
+        requestedLocation: booking.requestedLocation || null,
+        date: dateString,
+        startTime: booking.startTime,
+        endTime: booking.endTime,
+        repeat: "weekly",
+        repeatWeeks: repeatWeeks,
+        repeatMessage: repeatMessage,
+        status: "pending",
+        price: offer.pricePerHour,
+        currency: offer.currency,
+        createdAt: new Date().toISOString(),
+        confirmedAt: null,
+        isMock: false,
+      };
+
+      const result = await bookingsCollection.insertOne(newBooking);
+      createdBookings.push(result.insertedId.toString());
+    }
+
+    return createdBookings[0];
+  } catch (error) {
+    console.log(error.message);
+  }
+
+  return null;
+}
+
+async function getUserByLogin(username, password) {
+  try {
+    const collection = db.collection("users");
+
+    const user = await collection.findOne({
+      username: username,
+      password: password,
+    });
+
+    if (user) {
+      convertId(user);
+    }
+
+    return user;
+  } catch (error) {
+    console.log(error.message);
+  }
+
+  return null;
+}
+
 export default {
   getFavoriteOfferIds,
   toggleFavorite,
@@ -700,6 +799,7 @@ export default {
   getReviewsByOffer,
 
   getUser,
+  getUserByLogin,
   createUser,
   getSports,
   deleteUser,
@@ -708,11 +808,13 @@ export default {
   getOffer,
 
   deleteBooking,
+  deleteBookingSeries,
   createBooking,
   createBookingNumber,
   getBooking,
   getBookingsByOffer,
   getBookingsByUser,
+  createRecurringBookingRequest,
 
   getTrainingLocations,
   getTrainingLocationsBySport,

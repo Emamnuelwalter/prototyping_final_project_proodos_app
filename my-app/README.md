@@ -334,19 +334,19 @@ Die Suchfunktion kann auf der Hauptseite genutzt werden und ermöglicht dem User
 
 Die Profilerstellung ist als standardmässiges Formular umgesetzt. Der User wird mit einer roten „*“-Markierung auf Pflichtfelder hingewiesen. Zusätzlich wird ein Hinweis angezeigt, dass im Prototyp keine echten Personendaten eingegeben werden sollen.
 
-<img src="/my-app/static/img/Screenshots/prototype_form_page.png" alt="Prfil-Form" width="400" height="auto">
+<img src="/my-app/static/img/Screenshots/prototype_form_page.png" alt="Profil-Form" width="400" height="auto">
 
 **Profil:**
 
 In der Profilansicht sieht der User alle relevanten Informationen seines erstellten Profils. Er kann in dieser Ansicht auch sein Profil löschen. Dadurch wird er zurück auf die Startseite geleitet und kann bei Bedarf ein neues Profil erstellen.
 
-<img src="/my-app/static/img/Screenshots/prototype_profile_page.png" alt="Profil" width="400" height="auto">
+<img src="/my-app/static/img/Screenshots/prototype_profile_page.png" alt="Profil-Page" width="400" height="auto">
 
 **Terminauswahl:**
 
 Die Terminauswahl ist in zwei Schritte aufgeteilt. Der User wählt zuerst einen verfügbaren Tag und danach eine passende Uhrzeit. Zusätzlich werden der Standort und eine Zusammenfassung der Buchung angezeigt.
 
-<img src="/my-app/static/img/Screenshots/prototype_booking_page.png" alt="Profil" width="400" height="auto">
+<img src="/my-app/static/img/Screenshots/prototype_booking_page.png" alt="Booking-Page" width="400" height="auto">
 
 **Designentscheidungen:**
 

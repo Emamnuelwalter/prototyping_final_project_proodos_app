@@ -1,5 +1,5 @@
 <script>
-  import SearchBar from "$lib/components/SearchBar.svelte";
+  import SearchBar from "$lib/components/search bar/SearchBar.svelte";
   import OfferList from "$lib/components/offers/OfferList.svelte";
 
   let { data } = $props();

@@ -23,6 +23,10 @@ export const actions = {
 
     const locationChoice = data.get("locationChoice");
 
+    const wantsRepeat = data.get("wantsRepeat") === "yes";
+    const repeatWeeks = Number(data.get("repeatWeeks") || 1);
+    const repeatMessage = data.get("repeatMessage") || "";
+
     let requestedLocation = null;
 
     if (locationChoice === "custom") {
@@ -67,7 +71,17 @@ export const actions = {
       });
     }
 
-    const bookingId = await db.createBooking(booking);
+    let bookingId = null;
+
+    if (wantsRepeat && repeatWeeks > 1) {
+      bookingId = await db.createRecurringBookingRequest(
+        booking,
+        repeatWeeks,
+        repeatMessage,
+      );
+    } else {
+      bookingId = await db.createBooking(booking);
+    }
 
     if (!bookingId) {
       return fail(500, {

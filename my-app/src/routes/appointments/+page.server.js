@@ -31,25 +31,31 @@ export async function load({ cookies }) {
 
 export const actions = {
   cancel: async ({ request, cookies }) => {
-    const userId = cookies.get("userId");
+  const userId = cookies.get("userId");
 
-    if (!userId) {
-      throw redirect(303, "/create-profil");
-    }
+  if (!userId) {
+    throw redirect(303, "/create-profil");
+  }
 
-    const data = await request.formData();
-    const bookingId = data.get("bookingId");
+  const data = await request.formData();
+  const bookingId = data.get("bookingId");
+  const repeatGroupId = data.get("repeatGroupId");
 
-    if (!bookingId) {
-      return fail(400, {
-        message: "Der Termin konnte nicht storniert werden.",
-      });
-    }
-
-    await db.deleteBooking(bookingId, userId);
-
+  if (repeatGroupId) {
+    await db.deleteBookingSeries(repeatGroupId, userId);
     throw redirect(303, "/appointments");
-  },
+  }
+
+  if (!bookingId) {
+    return fail(400, {
+      message: "Der Termin konnte nicht storniert werden.",
+    });
+  }
+
+  await db.deleteBooking(bookingId, userId);
+
+  throw redirect(303, "/appointments");
+},
 
   reschedule: async ({ request, cookies }) => {
     const userId = cookies.get("userId");

@@ -55,7 +55,7 @@
         >
           <input type="hidden" name="offerId" value={offer._id} />
 
-          <button class="heart-button" type="submit">
+          <button class:liked-heart={isFavorite} class="heart-button" type="submit">
             {isFavorite ? "♥" : "♡"}
           </button>
         </form>
@@ -136,4 +136,9 @@
     margin-top: 6px;
     font-weight: 600;
   }
+
+  .liked-heart {
+  background-color: #555;
+  color: red;
+}
 </style>

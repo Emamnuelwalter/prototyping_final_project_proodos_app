@@ -56,7 +56,9 @@ export const actions = {
       !updatedUser.firstname ||
       !updatedUser.lastname ||
       !updatedUser.email ||
-      !updatedUser.gender
+      !updatedUser.gender||
+      !updatedUser.canton||
+      !updatedUser.municipality
     ) {
       return fail(400, {
         message: "Bitte füllen Sie alle Pflichtfelder aus.",
@@ -77,6 +79,14 @@ export const actions = {
       await db.deleteUser(userId);
     }
 
+    cookies.delete("userId", {
+      path: "/",
+    });
+
+    throw redirect(303, "/");
+  },
+
+  logout: async ({ cookies }) => {
     cookies.delete("userId", {
       path: "/",
     });

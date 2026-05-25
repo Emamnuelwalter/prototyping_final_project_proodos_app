@@ -6,6 +6,8 @@ export const actions = {
     const data = await request.formData();
 
     const user = {
+      username: data.get("username"),
+      password: data.get("password"),
       firstname: data.get("firstname"),
       lastname: data.get("lastname"),
       birthday: data.get("birthday"),
@@ -20,17 +22,19 @@ export const actions = {
         { sport: data.get("sport3"), level: data.get("level3") },
       ],
       gender: data.get("gender"),
-      goal: data.get("goal")
+      goal: data.get("goal"),
     };
 
     if (
+      !user.username||
+      !user.password||
       !user.firstname ||
       !user.lastname ||
       !user.birthday ||
       !user.email ||
       !user.phone ||
       !user.canton ||
-      !user.gender||
+      !user.gender ||
       !user.municipality
     ) {
       return fail(400, {

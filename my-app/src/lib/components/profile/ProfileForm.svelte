@@ -35,7 +35,31 @@
       {form.message}
     </div>
   {/if}
+
   <form method="POST" action="?/create">
+  
+    <div class="row">
+      <div class="mb-3 col-md-6">
+        <label for="username" class="form-label">
+          Benutzername <span class="required">*</span>
+        </label>
+        <input id="username" name="username" class="form-control" required />
+      </div>
+
+      <div class="mb-3 col-md-6">
+        <label for="password" class="form-label">
+          Passwort <span class="required">*</span>
+        </label>
+        <input
+          id="password"
+          name="password"
+          type="password"
+          class="form-control"
+          required
+        />
+      </div>
+    </div>
+
     <div class="col-md-6 mb-3">
       <label for="gender" class="form-label">Geschlecht</label>
       <select id="gender" name="gender" class="form-select" required>

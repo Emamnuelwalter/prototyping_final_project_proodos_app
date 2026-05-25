@@ -7,3 +7,4 @@ export function load({ cookies }) {
     throw redirect(303, "/offers");
   }
 }
+

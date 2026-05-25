@@ -4,9 +4,14 @@
   import { sports } from "$lib/data/sports.js";
   import { cantonMunicipalities } from "$lib/data/locations.js";
 
-  let { offers = [] } = $props();
+  let {
+    offers = [],
+    search = $bindable(""),
+    showResults = true,
+    filteredOffers = $bindable([]),
+    isActive = $bindable(false),
+  } = $props();
 
-  let search = $state("");
   let showFilters = $state(false);
 
   let selectedSport = $state("");
@@ -151,6 +156,11 @@
       ? offers.filter(matchesSearch).filter(matchesFilters).slice(0, 12)
       : [],
   );
+
+  $effect(() => {
+    filteredOffers = results;
+    isActive = hasActiveSearch;
+  });
 
   onMount(async () => {
     const savedFilters = sessionStorage.getItem(storageKey);
@@ -337,7 +347,7 @@
     </div>
   {/if}
 
-  {#if hasActiveSearch}
+  {#if showResults && hasActiveSearch}
     <div class="search-result-section mt-4">
       <h4 class="mb-3">Suchergebnisse</h4>
 

@@ -34,7 +34,12 @@
     >
       <input type="hidden" name="offerId" value={offer._id} />
 
-      <button class="detail-heart-button" type="submit" aria-label="Favorit">
+      <button
+        class:liked-heart={isFavorite}
+        class="detail-heart-button"
+        type="submit"
+        aria-label="Favorit"
+      >
         {isFavorite ? "♥" : "♡"}
       </button>
     </form>
@@ -102,5 +107,10 @@
 
   .detail-heart-button:hover {
     background-color: #333;
+  }
+
+  .liked-heart {
+    background-color: #555;
+    color: red;
   }
 </style>

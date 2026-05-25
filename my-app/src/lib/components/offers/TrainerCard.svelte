@@ -10,6 +10,7 @@
   );
 </script>
 
+
 <div class="trainer-card">
   <img
     src="/img/placeholder_user.png"

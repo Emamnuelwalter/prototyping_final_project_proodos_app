@@ -1,26 +1,23 @@
 <div class="container py-5">
-  <div class="start-card mx-auto text-center">
-    <h1>Willkommen bei Proboos</h1>
+  <div class="home-box mx-auto text-center">
+    <h1 class="mb-3">Willkommen bei Proobos</h1>
 
-    <p class="text-muted mt-3">
-      Erstellen Sie ein kurzes Profil, damit passende Trainingsangebote angezeigt werden können.
+    <p class="text-muted mb-4">
+      Finden Sie passende Trainer und Trainingsangebote in Ihrer Nähe.
     </p>
 
-    <div class="mt-4">
-      <a href="/create-profil" class="btn btn-primary">
-        Profil erstellen
+    <div class="d-flex justify-content-center gap-3">
+      <a href="/login" class="btn btn-primary"> Einloggen </a>
+
+      <a href="/create-profil" class="btn btn-outline-primary">
+        Registrieren
       </a>
     </div>
   </div>
 </div>
 
 <style>
-  .start-card {
-    max-width: 600px;
-    border: 1px solid #ddd;
-    border-radius: 20px;
-    padding: 48px;
-    margin-top: 80px;
-    background-color: white;
+  .home-box {
+    max-width: 650px;
   }
 </style>

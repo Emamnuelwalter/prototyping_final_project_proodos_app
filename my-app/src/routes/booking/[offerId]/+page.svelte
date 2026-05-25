@@ -4,8 +4,12 @@
   import LocationSelect from "$lib/components/booking/LocationSelect.svelte";
   import BookingSummary from "$lib/components/booking/BookingSummary.svelte";
   import RequestLocation from "$lib/components/booking/RequestLocation.svelte";
+  import RepeatBookingRequest from "$lib/components/booking/RepeatBookingRequest.svelte";
 
   let useCustomLocation = $state(false);
+  let wantsRepeat = $state(false);
+  let repeatWeeks = $state("3");
+  let repeatMessage = $state("");
 
   let requestedLocation = $state({
     name: "",
@@ -39,6 +43,11 @@
   let dates = $derived([...new Set(freeTimes.map((time) => time.date))]);
 
   let times = $derived(freeTimes.filter((time) => time.date === selectedDate));
+  $effect(() => {
+    selectedDate;
+
+    selectedTime = "";
+  });
 </script>
 
 <div class="container py-5">
@@ -76,14 +85,23 @@
       <div class="row g-4">
         <div class="col-lg-8">
           <div class="booking-card mb-4">
-            <DateSelect {dates} bind:selectedDate />
+            <DateSelect {dates} {freeTimes} bind:selectedDate />
           </div>
 
           {#if selectedDate}
             <div class="booking-card mb-4">
+              <h4>2. Uhrzeit auswählen</h4>
               <TimeSlotSelect {times} bind:selectedTime />
             </div>
           {/if}
+
+          <div class="booking-card mb-4">
+            <RepeatBookingRequest
+              bind:wantsRepeat
+              bind:repeatWeeks
+              bind:repeatMessage
+            />
+          </div>
 
           <div class="booking-card mb-4">
             <LocationSelect location={offer.location} />

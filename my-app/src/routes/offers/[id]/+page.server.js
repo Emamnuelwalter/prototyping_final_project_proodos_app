@@ -6,12 +6,32 @@ export async function load({ params, cookies }) {
 
   const offer = await db.getOffer(params.id);
   const reviews = await db.getReviewsByOffer(params.id);
+  const userBookings = await db.getBookingsByUser(userId);
+  console.log("Offer Detail ID:", params.id);
+  console.log(
+    "User bookings:",
+    userBookings.map((booking) => ({
+      id: booking._id,
+      offerId: booking.offerId,
+      status: booking.status,
+    })),
+  );
 
   let isFavorite = false;
+  let canReview = false;
+  let userBooking = null;
 
   if (userId) {
     const favoriteOfferIds = await db.getFavoriteOfferIds(userId);
     isFavorite = favoriteOfferIds.includes(params.id);
+
+    const userBookings = await db.getBookingsByUser(userId);
+
+    userBooking = userBookings.find((booking) => {
+      return booking.offerId === params.id && booking.status !== "cancelled";
+    });
+
+    canReview = userBooking ? true : false;
   }
 
   if (offer) {
@@ -21,6 +41,8 @@ export async function load({ params, cookies }) {
   return {
     offer,
     reviews,
+    canReview,
+    userBooking,
     isAdmin: true,
   };
 }
@@ -52,8 +74,29 @@ export const actions = {
     };
   },
 
-  createReview: async ({ request, params }) => {
+  createReview: async ({ request, params, cookies }) => {
     try {
+      const userId = cookies.get("userId");
+
+      if (!userId) {
+        return fail(401, {
+          error: "Bitte zuerst ein Profil erstellen.",
+        });
+      }
+
+      const userBookings = await db.getBookingsByUser(userId);
+
+      const userBooking = userBookings.find((booking) => {
+        return booking.offerId === params.id && booking.status !== "cancelled";
+      });
+
+      if (!userBooking) {
+        return fail(403, {
+          error:
+            "Sie können dieses Angebot nur bewerten, wenn Sie eine Buchung dazu haben.",
+        });
+      }
+
       const formData = await request.formData();
 
       const rating = Number(formData.get("rating"));
@@ -73,9 +116,9 @@ export const actions = {
 
       const review = {
         id: crypto.randomUUID(),
-        bookingId: null,
-        customerId: "user_mock",
-        trainerId: null,
+        bookingId: userBooking._id,
+        customerId: userId,
+        trainerId: userBooking.trainerId,
         offerId: params.id,
         rating,
         comment: comment.trim(),
@@ -95,33 +138,5 @@ export const actions = {
         error: "Bewertung konnte nicht gespeichert werden.",
       });
     }
-  },
-
-  deleteReview: async ({ request }) => {
-    const currentUser = {
-      id: "user_001",
-      role: "admin",
-    };
-
-    if (currentUser.role !== "admin") {
-      return fail(403, {
-        error: "Du hast keine Berechtigung, Bewertungen zu löschen.",
-      });
-    }
-
-    const formData = await request.formData();
-    const reviewId = formData.get("reviewId");
-
-    if (!reviewId) {
-      return fail(400, {
-        error: "Keine Bewertung ausgewählt.",
-      });
-    }
-
-    await db.deleteReview(reviewId);
-
-    return {
-      success: true,
-    };
   },
 };

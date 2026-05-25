@@ -1,5 +1,16 @@
 <script>
   import { sports, levels } from "$lib/data/sports.js";
+  import { cantonMunicipalities } from "$lib/data/locations.js";
+
+  let municipalities = $derived(
+    formUser.canton && cantonMunicipalities[formUser.canton]
+      ? cantonMunicipalities[formUser.canton]
+      : [],
+  );
+
+  function handleCantonChange() {
+    formUser.municipality = "";
+  }
 
   let { user, form } = $props();
 
@@ -186,27 +197,59 @@
               readonly
             />
           </div>
-          
+
           <div class="col-md-6 mb-3">
             <label for="canton" class="form-label">Kanton</label>
-            <input
-              id="canton"
-              name="canton"
-              class="form-control"
-              bind:value={formUser.canton}
-              readonly={!editMode}
-            />
+            {#if editMode}
+              <select
+                id="canton"
+                name="canton"
+                class="form-select"
+                bind:value={formUser.canton}
+                onchange={handleCantonChange}
+                required
+              >
+                <option value="">Kanton auswählen</option>
+
+                {#each Object.keys(cantonMunicipalities) as canton}
+                  <option value={canton}>{canton}</option>
+                {/each}
+              </select>
+            {:else}
+              <input
+                id="canton"
+                class="form-control"
+                value={formUser.canton}
+                readonly
+              />
+            {/if}
           </div>
 
           <div class="col-md-6 mb-3">
             <label for="municipality" class="form-label">Gemeinde</label>
-            <input
-              id="municipality"
-              name="municipality"
-              class="form-control"
-              bind:value={formUser.municipality}
-              readonly={!editMode}
-            />
+            {#if editMode}
+              <select
+                id="municipality"
+                name="municipality"
+                class="form-select"
+                bind:value={formUser.municipality}
+                disabled={!formUser.canton}
+                required
+              >
+                <option value="">Gemeinde auswählen</option>
+
+                {#each municipalities as municipality}
+                  <option value={municipality}>{municipality}</option>
+                {/each}
+              </select>
+            {:else}
+              <input
+                id="municipality"
+                class="form-control"
+                value={formUser.municipality}
+                readonly
+              />
+            {/if}
           </div>
         </div>
 
@@ -284,6 +327,14 @@
             }}
           >
             Konto löschen
+          </button>
+
+          <button
+            class="btn btn-outline-secondary"
+            type="submit"
+            formaction="?/logout"
+          >
+            Ausloggen
           </button>
 
           {#if editMode}

@@ -5,17 +5,25 @@
     "Schwimmen",
     "Boxen",
     "Yoga",
-    "Golf"
+    "Golf",
   ];
 </script>
 
 <div class="container py-5">
+  <div>
+    <nav class="breadcrumb-nav mb-4">
+      <a href="/offers">Angebote</a>
+      <span>/</span>
+      <span>Sportkategorie</span>
+    </nav>
+  </div>
+
   <h1 class="mb-4">Sportkategorien</h1>
 
   <div class="row">
     {#each sports as sport}
       <div class="col-12 col-sm-6 col-lg-4 mb-4">
-        <a href={"/categories/"+sport} class="category-card">
+        <a href={"/categories/" + sport} class="category-card">
           <img
             src="/img/offers_placeholder.png"
             alt={sport}
@@ -54,5 +62,20 @@
 
   .category-text h4 {
     margin: 0;
+  }
+  .breadcrumb-nav {
+    display: flex;
+    gap: 8px;
+    font-size: 15px;
+    color: #6c757d;
+  }
+
+  .breadcrumb-nav a {
+    color: #0d6efd;
+    text-decoration: none;
+  }
+
+  .breadcrumb-nav a:hover {
+    text-decoration: underline;
   }
 </style>
