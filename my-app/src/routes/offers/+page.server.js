@@ -1,5 +1,26 @@
 import db from "$lib/db.js";
 
+function getOfferScore(offer, user) {
+  let score = 0;
+
+  const interestedSports =
+    user?.interestedSports?.map((interest) => interest.sport) || [];
+
+  if (interestedSports.includes(offer.sport)) {
+    score += 100;
+  }
+
+  if (offer.location?.address?.municipality === user?.municipality) {
+    score += 50;
+  }
+
+  if (offer.location?.address?.canton === user?.canton) {
+    score += 25;
+  }
+
+  return score;
+}
+
 export async function load({ cookies, url }) {
   const userId = cookies.get("userId");
   const profileCreated = url.searchParams.get("profileCreated") === "true";
@@ -16,30 +37,41 @@ export async function load({ cookies, url }) {
     };
   });
 
+  let sortedOffers = offersWithFavorites;
   let matchingOffers = [];
   let recommendedOffers = [];
 
   if (user) {
-    matchingOffers = offersWithFavorites.filter((offer) => {
-      return user.interestedSports.some((interest) => {
-        return (
-          offer.sport === interest.sport &&
-          offer.levels &&
-          offer.levels.includes(interest.level)
-        );
+    const interestedSports =
+      user.interestedSports?.map((interest) => interest.sport) || [];
+
+    sortedOffers = offersWithFavorites
+      .map((offer) => {
+        return {
+          ...offer,
+          matchScore: getOfferScore(offer, user),
+        };
+      })
+      .sort((a, b) => {
+        return b.matchScore - a.matchScore;
       });
+
+    matchingOffers = sortedOffers.filter((offer) => {
+      return interestedSports.includes(offer.sport);
     });
 
-    recommendedOffers = offersWithFavorites.filter((offer) => {
-      return !matchingOffers.includes(offer);
+    recommendedOffers = sortedOffers.filter((offer) => {
+      return (
+        offer.location?.address?.canton === user.canton &&
+        !interestedSports.includes(offer.sport)
+      );
     });
   } else {
     recommendedOffers = offersWithFavorites;
   }
-
   return {
     user,
-    offers: offersWithFavorites,
+    offers: sortedOffers,
     matchingOffers,
     recommendedOffers,
     profileCreated,
@@ -50,13 +82,8 @@ export const actions = {
   toggleFavorite: async ({ request, cookies }) => {
     const userId = cookies.get("userId");
 
-    console.log("TOGGLE FAVORITE ACTION AUFGERUFEN");
-    console.log("userId:", userId);
-
     const data = await request.formData();
     const offerId = data.get("offerId");
-
-    console.log("offerId:", offerId);
 
     if (!userId || !offerId) {
       return {

@@ -1,4 +1,6 @@
 <script>
+  import { getTrainerImage } from "$lib/utils/images.js";
+
   let { offer } = $props();
 
   let trainer = $derived(offer.trainer);
@@ -6,17 +8,12 @@
   let trainerName = $derived(
     (trainer?.firstname || trainer?.firstName || "") +
       " " +
-      (trainer?.lastname || trainer?.lastName || "")
+      (trainer?.lastname || trainer?.lastName || ""),
   );
 </script>
 
-
 <div class="trainer-card">
-  <img
-    src="/img/placeholder_user.png"
-    alt="Trainerbild"
-    class="trainer-img"
-  />
+  <img src={getTrainerImage(trainer)} alt={trainerName} class="trainer-img" />
 
   <h4>{trainerName}</h4>
 
@@ -50,7 +47,7 @@
     Preis: <strong>{offer.pricePerHour} {offer.currency}/h</strong>
   </p>
 
-  <a href={"/booking/"+offer._id} class="btn btn-primary w-100">
+  <a href={"/booking/" + offer._id} class="btn btn-primary w-100">
     Jetzt buchen
   </a>
 </div>

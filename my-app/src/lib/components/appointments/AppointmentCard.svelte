@@ -16,6 +16,23 @@
       booking.requestedLocation !== undefined,
   );
   let isRepeatedBooking = $derived(booking.repeat === "weekly");
+
+  let allRepeatBookingsCancelled = $derived(
+    booking.isRepeatGroup &&
+      booking.repeatBookings?.length > 0 &&
+      booking.repeatBookings.every((repeatBooking) => {
+        return repeatBooking.status === "cancelled";
+      }),
+  );
+  function formatDateCH(dateString) {
+    if (!dateString) return "";
+
+    return new Date(dateString).toLocaleDateString("de-CH", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+  }
 </script>
 
 <div class="card appointment-card">
@@ -50,13 +67,13 @@
       </p>
 
       <p class="mb-1 text-muted">
-        {booking.repeatBookings[0].date} bis {booking.repeatBookings[
+        {formatDateCH(booking.repeatBookings[0].date)} bis {formatDateCH(booking.repeatBookings[
           booking.repeatBookings.length - 1
-        ].date}
+        ].date)}
       </p>
     {:else}
       <p class="mb-1">
-        {booking.date} · {booking.startTime} - {booking.endTime}
+        {formatDateCH(booking.date)} · {booking.startTime} - {booking.endTime}
       </p>
     {/if}
 
@@ -121,7 +138,7 @@
           <ul class="mb-3">
             {#each booking.repeatBookings as repeatBooking}
               <li>
-                {repeatBooking.date} · {repeatBooking.startTime} - {repeatBooking.endTime}
+                {formatDateCH(repeatBooking.date)} · {repeatBooking.startTime} - {repeatBooking.endTime}
               </li>
             {/each}
           </ul>
@@ -134,44 +151,72 @@
           Angebot ansehen
         </a>
 
-        {#if !booking.isRepeatGroup && booking.freeTimes?.length > 0}
-          <form method="POST" action="?/reschedule" class="mt-2">
-            <input type="hidden" name="bookingId" value={booking._id} />
-
-            <select class="form-select mb-2" name="selectedSlot" required>
-              <option value="">Neuen Termin auswählen</option>
-
-              {#each booking.freeTimes as time}
-                <option
-                  value={`${time.date}_${time.startTime}_${time.endTime}`}
-                >
-                  {time.date} · {time.startTime} - {time.endTime}
-                </option>
-              {/each}
-            </select>
-
-            <button class="btn btn-outline-secondary w-100" type="submit">
-              Termin verschieben
-            </button>
-          </form>
-        {/if}
-
         {#if !booking.isRepeatGroup}
-          <form
-            method="POST"
-            action="?/cancel"
-            onsubmit={(event) => {
-              if (!confirm("Möchten Sie diesen Termin wirklich stornieren?")) {
-                event.preventDefault();
-              }
-            }}
-          >
-            <input type="hidden" name="bookingId" value={booking._id} />
+          {#if booking.status === "cancelled"}
+            <div class="alert alert-secondary mt-2 mb-2">
+              Dieser Termin wurde bereits storniert.
+            </div>
 
-            <button class="btn btn-outline-danger w-100 mt-2" type="submit">
-              Termin stornieren
-            </button>
-          </form>
+            <form
+              method="POST"
+              action="?/remove"
+              onsubmit={(event) => {
+                if (
+                  !confirm(
+                    "Möchten Sie diesen stornierten Termin endgültig löschen?",
+                  )
+                ) {
+                  event.preventDefault();
+                }
+              }}
+            >
+              <input type="hidden" name="bookingId" value={booking._id} />
+
+              <button class="btn btn-outline-danger w-100 mt-2" type="submit">
+                Endgültig löschen
+              </button>
+            </form>
+          {:else}
+            {#if booking.freeTimes?.length > 0}
+              <form method="POST" action="?/reschedule" class="mt-2">
+                <input type="hidden" name="bookingId" value={booking._id} />
+
+                <select class="form-select mb-2" name="selectedSlot" required>
+                  <option value="">Neuen Termin auswählen</option>
+
+                  {#each booking.freeTimes as time}
+                    <option
+                      value={`${time.date}_${time.startTime}_${time.endTime}`}
+                    >
+                      {formatDateCH(time.date)} · {time.startTime} - {time.endTime}
+                    </option>
+                  {/each}
+                </select>
+
+                <button class="btn btn-outline-secondary w-100" type="submit">
+                  Termin verschieben
+                </button>
+              </form>
+            {/if}
+
+            <form
+              method="POST"
+              action="?/cancel"
+              onsubmit={(event) => {
+                if (
+                  !confirm("Möchten Sie diesen Termin wirklich stornieren?")
+                ) {
+                  event.preventDefault();
+                }
+              }}
+            >
+              <input type="hidden" name="bookingId" value={booking._id} />
+
+              <button class="btn btn-outline-danger w-100 mt-2" type="submit">
+                Termin stornieren
+              </button>
+            </form>
+          {/if}
         {/if}
 
         {#if booking.isRepeatGroup}
@@ -183,72 +228,107 @@
             {#each booking.repeatBookings as repeatBooking}
               <div class="repeat-item">
                 <div class="repeat-info">
-                  <strong>{repeatBooking.date}</strong><br />
+                  <strong>{formatDateCH(repeatBooking.date)}</strong><br />
                   <span class="text-muted">
                     {repeatBooking.startTime} - {repeatBooking.endTime}
                   </span>
+
+                  {#if repeatBooking.status === "cancelled"}
+                    <div class="badge text-bg-secondary mt-2">
+                      Bereits storniert
+                    </div>
+                  {/if}
                 </div>
 
                 <div class="repeat-actions">
-                  {#if repeatBooking.freeTimes?.length > 0}
-                    <form method="POST" action="?/reschedule" class="mb-2">
+                  {#if repeatBooking.status === "cancelled"}
+                    <form
+                      method="POST"
+                      action="?/remove"
+                      onsubmit={(event) => {
+                        if (
+                          !confirm(
+                            "Möchten Sie diesen stornierten Termin endgültig löschen?",
+                          )
+                        ) {
+                          event.preventDefault();
+                        }
+                      }}
+                    >
                       <input
                         type="hidden"
                         name="bookingId"
                         value={repeatBooking._id}
                       />
 
-                      <select
-                        class="form-select form-select-sm mb-2"
-                        name="selectedSlot"
-                        required
-                      >
-                        <option value="">Neuer Termin</option>
-
-                        {#each repeatBooking.freeTimes as time}
-                          <option
-                            value={`${time.date}_${time.startTime}_${time.endTime}`}
-                          >
-                            {time.date} · {time.startTime} - {time.endTime}
-                          </option>
-                        {/each}
-                      </select>
-
                       <button
-                        class="btn btn-outline-secondary btn-sm w-100"
+                        class="btn btn-outline-danger btn-sm w-100"
                         type="submit"
                       >
-                        Verschieben
+                        Löschen
+                      </button>
+                    </form>
+                  {:else}
+                    {#if repeatBooking.freeTimes?.length > 0}
+                      <form method="POST" action="?/reschedule" class="mb-2">
+                        <input
+                          type="hidden"
+                          name="bookingId"
+                          value={repeatBooking._id}
+                        />
+
+                        <select
+                          class="form-select form-select-sm mb-2"
+                          name="selectedSlot"
+                          required
+                        >
+                          <option value="">Neuer Termin</option>
+
+                          {#each repeatBooking.freeTimes as time}
+                            <option
+                              value={`${time.date}_${time.startTime}_${time.endTime}`}
+                            >
+                              {formatDateCH(time.date)} · {time.startTime} - {time.endTime}
+                            </option>
+                          {/each}
+                        </select>
+
+                        <button
+                          class="btn btn-outline-secondary btn-sm w-100"
+                          type="submit"
+                        >
+                          Verschieben
+                        </button>
+                      </form>
+                    {/if}
+
+                    <form
+                      method="POST"
+                      action="?/cancel"
+                      onsubmit={(event) => {
+                        if (
+                          !confirm(
+                            "Möchten Sie diesen einzelnen Termin stornieren?",
+                          )
+                        ) {
+                          event.preventDefault();
+                        }
+                      }}
+                    >
+                      <input
+                        type="hidden"
+                        name="bookingId"
+                        value={repeatBooking._id}
+                      />
+
+                      <button
+                        class="btn btn-outline-danger btn-sm w-100"
+                        type="submit"
+                      >
+                        Stornieren
                       </button>
                     </form>
                   {/if}
-
-                  <form
-                    method="POST"
-                    action="?/cancel"
-                    onsubmit={(event) => {
-                      if (
-                        !confirm(
-                          "Möchten Sie diesen einzelnen Termin stornieren?",
-                        )
-                      ) {
-                        event.preventDefault();
-                      }
-                    }}
-                  >
-                    <input
-                      type="hidden"
-                      name="bookingId"
-                      value={repeatBooking._id}
-                    />
-
-                    <button
-                      class="btn btn-outline-danger btn-sm w-100"
-                      type="submit"
-                    >
-                      Stornieren
-                    </button>
-                  </form>
                 </div>
               </div>
             {/each}
@@ -256,27 +336,57 @@
         {/if}
 
         {#if booking.isRepeatGroup}
-          <form
-            method="POST"
-            action="?/cancel"
-            onsubmit={(event) => {
-              if (
-                !confirm("Möchten Sie wirklich die ganze Serie stornieren?")
-              ) {
-                event.preventDefault();
-              }
-            }}
-          >
-            <input
-              type="hidden"
-              name="repeatGroupId"
-              value={booking.repeatGroupId}
-            />
+          {#if allRepeatBookingsCancelled}
+            <div class="alert alert-secondary mt-2 mb-2">
+              Diese Wiederholungsserie wurde bereits storniert.
+            </div>
 
-            <button class="btn btn-danger w-100 mt-2" type="submit">
-              Ganze Serie stornieren
-            </button>
-          </form>
+            <form
+              method="POST"
+              action="?/removeSeries"
+              onsubmit={(event) => {
+                if (
+                  !confirm(
+                    "Möchten Sie diese stornierte Serie endgültig löschen?",
+                  )
+                ) {
+                  event.preventDefault();
+                }
+              }}
+            >
+              <input
+                type="hidden"
+                name="repeatGroupId"
+                value={booking.repeatGroupId}
+              />
+
+              <button class="btn btn-outline-danger w-100 mt-2" type="submit">
+                Ganze Serie endgültig löschen
+              </button>
+            </form>
+          {:else}
+            <form
+              method="POST"
+              action="?/cancel"
+              onsubmit={(event) => {
+                if (
+                  !confirm("Möchten Sie wirklich die ganze Serie stornieren?")
+                ) {
+                  event.preventDefault();
+                }
+              }}
+            >
+              <input
+                type="hidden"
+                name="repeatGroupId"
+                value={booking.repeatGroupId}
+              />
+
+              <button class="btn btn-danger w-100 mt-2" type="submit">
+                Ganze Serie stornieren
+              </button>
+            </form>
+          {/if}
         {/if}
       </div>
     {/if}

@@ -4,6 +4,15 @@
   function slotValue(time) {
     return `${time.startTime}-${time.endTime}`;
   }
+  function formatDateCH(dateString) {
+    if (!dateString) return "";
+
+    return new Date(dateString).toLocaleDateString("de-CH", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+  }
 </script>
 
 <div>

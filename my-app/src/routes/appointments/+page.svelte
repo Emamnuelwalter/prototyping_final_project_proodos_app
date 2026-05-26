@@ -14,6 +14,10 @@
       {form.message}
     </div>
   {/if}
-
-  <AppointmentList {bookings} />
+  {#if bookings.length > 0}
+    <AppointmentList {bookings} />
+  {:else}
+    <p class="text-muted">Du hast noch keine Angebote gebucht.</p>
+    <a href="/offers" class="btn btn-primary">Angebote entdecken</a>
+  {/if}
 </div>

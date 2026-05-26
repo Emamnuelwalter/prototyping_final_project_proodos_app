@@ -1,6 +1,7 @@
 <script>
   import { enhance } from "$app/forms";
   import { invalidateAll } from "$app/navigation";
+  import { getOfferImage, getSportPictogram } from "$lib/utils/images.js";
 
   let { offer, removeOnUnfavorite = false, onUnfavorite = null } = $props();
 
@@ -29,7 +30,11 @@
     <div class="offer-card">
       <div class="image-box">
         <a href={"/offers/" + offer._id} class="offer-link">
-          <img src="/img/offers_placeholder.png" alt="Trainingsangebot" />
+          <img
+            src={getOfferImage(offer.sport)}
+            alt={offer.sport}
+            class="card-img-top"
+          />
         </a>
 
         <form
@@ -55,7 +60,11 @@
         >
           <input type="hidden" name="offerId" value={offer._id} />
 
-          <button class:liked-heart={isFavorite} class="heart-button" type="submit">
+          <button
+            class:liked-heart={isFavorite}
+            class="heart-button"
+            type="submit"
+          >
             {isFavorite ? "♥" : "♡"}
           </button>
         </form>
@@ -64,10 +73,10 @@
       <a href={"/offers/" + offer._id} class="offer-link">
         <div class="offer-info">
           <h5>{offer.title}</h5>
+          <p class="price">{offer.pricePerHour} {offer.currency}/h</p>
           <p>{trainerName}</p>
           <p>{offer.levels?.join(", ")}</p>
           <p>{municipality}, {canton}</p>
-          <p class="price">{offer.pricePerHour} {offer.currency}/h</p>
         </div>
       </a>
     </div>
@@ -138,7 +147,7 @@
   }
 
   .liked-heart {
-  background-color: #555;
-  color: red;
-}
+    background-color: #555;
+    color: red;
+  }
 </style>

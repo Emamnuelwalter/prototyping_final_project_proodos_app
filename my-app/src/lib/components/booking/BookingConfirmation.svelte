@@ -6,6 +6,15 @@
       " " +
       (booking.trainer?.lastname || booking.trainer?.lastName || ""),
   );
+  function formatDateCH(dateString) {
+  if (!dateString) return "";
+
+  return new Date(dateString).toLocaleDateString("de-CH", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+}
 </script>
 
 <div class="booking-confirmation text-center mx-auto">
@@ -17,7 +26,7 @@
     <h4>{trainerName}</h4>
 
     <p class="mt-4">
-      Termin: {booking.date} - {booking.startTime} - {booking.endTime}
+      Termin: {formatDateCH(booking.date)} - {booking.startTime} - {booking.endTime}
     </p>
 
     {#if booking.bookingNumber}

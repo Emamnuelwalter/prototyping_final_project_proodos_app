@@ -1,14 +1,7 @@
-export async function load() {
-  const sports = [
-    "Krafttraining",
-    "Tennis",
-    "Schwimmen",
-    "Boxen",
-    "Yoga",
-    "Golf"
-  ];
+import { sports } from "$lib/data/sports.js";
 
+export async function load() {
   return {
-    sports
+    sports,
   };
 }

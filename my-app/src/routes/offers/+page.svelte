@@ -19,20 +19,17 @@
 
     <div class="page-intro mb-5">
       <h1>Trainingsangebote entdecken</h1>
-      <p>
-        Finden Sie passende Trainer und Kurse basierend auf Ihrem Profil.
-      </p>
+      <p>Finden Sie passende Trainer und Kurse basierend auf Ihrem Profil.</p>
 
       <SearchBar offers={data.offers} />
     </div>
-
     <OfferList
-      title="Kurse und Trainer in der Nähe basierend auf Ihrem Profil"
+      title="Passende Angebote zu Ihren Sportarten"
       offers={data.matchingOffers}
     />
 
     <OfferList
-      title="Empfohlene Kurse und Trainer in der Nähe"
+      title={`Weitere Angebote im Kanton ${data.user?.canton || ""}`}
       offers={data.recommendedOffers}
     />
   </div>

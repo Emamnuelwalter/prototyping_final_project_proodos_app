@@ -17,8 +17,8 @@
   {#if isLoggedIn}
     <div class="navbar-center">
       <a href="/offers">Angebote</a>
-      <a href="/categories">Sportarten</a>
       <a href="/map">Karte</a>
+      <a href="/categories">Sportarten</a>
       <a href="/favorites">Favoriten</a>
       <a href="/appointments">Meine Termine</a>
     </div>
@@ -32,16 +32,34 @@
           aria-label="Profilmenü öffnen"
         >
           👤
+
+          {#if data.unreadNotificationCount > 0}
+            <span class="notification-dot"></span>
+          {/if}
         </button>
 
         {#if showProfileMenu}
           <div class="profile-dropdown">
             <a href="/profil">Mein Profil</a>
-            <a href="/notifications">Benachrichtigungen</a>
+            <a href="/notifications" class="notification-link"
+              >Benachrichtigungen
+              {#if data.unreadNotificationCount > 0}
+                <span class="notification-count">
+                  {data.unreadNotificationCount}
+                </span>
+              {/if}</a
+            >
             <a href="/info">Info</a>
 
             <form method="POST" action="/profil?/logout">
-              <button type="submit">Ausloggen</button>
+              <button
+                type="submit"
+                onclick={(event) => {
+                  if (!confirm("Möchten Sie sich wirklich Aussloggen?")) {
+                    event.preventDefault();
+                  }
+                }}>Ausloggen</button
+              >
             </form>
           </div>
         {/if}
@@ -117,7 +135,6 @@
     gap: 14px;
   }
 
-  .notification-button,
   .profile-button {
     width: 44px;
     height: 44px;
@@ -130,7 +147,6 @@
     justify-content: center;
   }
 
-  .notification-button:hover,
   .profile-button:hover {
     background-color: #e9ecef;
   }
@@ -236,5 +252,33 @@
       gap: 12px;
       text-align: center;
     }
+  }
+  .profile-button {
+    position: relative;
+  }
+
+  .notification-dot {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 10px;
+    height: 10px;
+    background-color: #dc3545;
+    border-radius: 50%;
+    border: 2px solid white;
+  }
+
+  .notification-link {
+    display: flex !important;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .notification-count {
+    background-color: #dc3545;
+    color: white;
+    border-radius: 999px;
+    padding: 2px 7px;
+    font-size: 12px;
   }
 </style>

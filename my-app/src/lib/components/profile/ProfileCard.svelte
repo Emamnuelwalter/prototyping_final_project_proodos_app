@@ -2,28 +2,42 @@
   import { sports, levels } from "$lib/data/sports.js";
   import { cantonMunicipalities } from "$lib/data/locations.js";
 
+  let { user, form } = $props();
+
+  let editMode = $state(false);
+  let formUser = $state(copyUser(user));
+
   let municipalities = $derived(
-    formUser.canton && cantonMunicipalities[formUser.canton]
+    formUser?.canton && cantonMunicipalities[formUser.canton]
       ? cantonMunicipalities[formUser.canton]
       : [],
   );
 
-  function handleCantonChange() {
-    formUser.municipality = "";
-  }
-
-  let { user, form } = $props();
-
-  let editMode = $state(false);
-  let formUser = $derived(copyUser(user));
+  $effect(() => {
+    if (!editMode) {
+      formUser = copyUser(user);
+    }
+  });
 
   function copyUser(user) {
     return {
       ...user,
+
+      // Falls alte und neue Mockdaten unterschiedliche Schreibweise haben
+      firstname: user?.firstname || user?.firstName || "",
+      lastname: user?.lastname || user?.lastName || "",
+
+      canton: user?.canton || "",
+      municipality: user?.municipality || "",
+
       interestedSports: user?.interestedSports
         ? user.interestedSports.map((interest) => ({ ...interest }))
         : [],
     };
+  }
+
+  function handleCantonChange() {
+    formUser.municipality = "";
   }
 
   function formatDate(date) {
@@ -333,6 +347,12 @@
             class="btn btn-outline-secondary"
             type="submit"
             formaction="?/logout"
+            onclick={(event) => {
+              if (!confirm("Möchten Sie sich wirklich Ausloggen?")) {
+                event.preventDefault();
+              }
+            }}
+            
           >
             Ausloggen
           </button>

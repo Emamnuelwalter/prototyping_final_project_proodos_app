@@ -213,31 +213,7 @@ async function createBooking(booking) {
       console.log("No offer with id " + booking.offerId);
       return null;
     }
-    async function createBookingNumber() {
-      const year = new Date().getFullYear();
-      const prefix = `BKG-${year}-`;
 
-      const bookingsCollection = db.collection("bookings");
-
-      const lastBooking = await bookingsCollection
-        .find({
-          bookingNumber: { $regex: `^${prefix}` },
-        })
-        .sort({
-          bookingNumber: -1,
-        })
-        .limit(1)
-        .toArray();
-
-      let nextNumber = 1;
-
-      if (lastBooking.length > 0) {
-        const lastNumber = lastBooking[0].bookingNumber.split("-")[2];
-        nextNumber = Number(lastNumber) + 1;
-      }
-
-      return prefix + String(nextNumber).padStart(4, "0");
-    }
     const bookingNumber = await createBookingNumber();
 
     const newBooking = {
@@ -262,12 +238,41 @@ async function createBooking(booking) {
     const bookingsCollection = db.collection("bookings");
     const result = await bookingsCollection.insertOne(newBooking);
 
-    return result.insertedId.toString();
+    return {
+      id: result.insertedId.toString(),
+      bookingNumber: newBooking.bookingNumber,
+    };
   } catch (error) {
     console.log(error.message);
   }
 
   return null;
+}
+
+async function createBookingNumber() {
+  const year = new Date().getFullYear();
+  const prefix = `BKG-${year}-`;
+
+  const bookingsCollection = db.collection("bookings");
+
+  const lastBooking = await bookingsCollection
+    .find({
+      bookingNumber: { $regex: `^${prefix}` },
+    })
+    .sort({
+      bookingNumber: -1,
+    })
+    .limit(1)
+    .toArray();
+
+  let nextNumber = 1;
+
+  if (lastBooking.length > 0) {
+    const lastNumber = lastBooking[0].bookingNumber.split("-")[2];
+    nextNumber = Number(lastNumber) + 1;
+  }
+
+  return prefix + String(nextNumber).padStart(4, "0");
 }
 
 // Get booking by id including offer, trainer and location
@@ -435,37 +440,52 @@ async function deleteBooking(bookingId, userId) {
   try {
     const collection = db.collection("bookings");
 
-    const query = createIdQuery(bookingId);
-    query.customerId = userId;
+    const result = await collection.updateOne(
+      {
+        ...createIdQuery(bookingId),
+        customerId: userId,
+      },
+      {
+        $set: {
+          status: "cancelled",
+          cancelledAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        },
+      },
+    );
 
-    const result = await collection.deleteOne(query);
-
-    if (result.deletedCount === 0) {
-      console.log("Booking could not be deleted");
-      return null;
-    }
-
-    return bookingId;
+    return result.modifiedCount > 0;
   } catch (error) {
     console.log(error.message);
   }
 
-  return null;
+  return false;
 }
 
 async function deleteBookingSeries(repeatGroupId, userId) {
   try {
     const collection = db.collection("bookings");
 
-    const result = await collection.deleteMany({
-      repeatGroupId: repeatGroupId,
-      customerId: userId,
-    });
+    const result = await collection.updateMany(
+      {
+        repeatGroupId: repeatGroupId,
+        customerId: userId,
+      },
+      {
+        $set: {
+          status: "cancelled",
+          cancelledAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        },
+      },
+    );
 
-    console.log("Delete booking series result:", result);
+    return result.modifiedCount > 0;
   } catch (error) {
     console.log(error.message);
   }
+
+  return false;
 }
 
 async function getReviewsByOffer(offerId) {
@@ -783,6 +803,174 @@ async function getUserByLogin(username, password) {
   return null;
 }
 
+async function createNotification(notification) {
+  try {
+    const collection = db.collection("notifications");
+
+    const newNotification = {
+      userId: notification.userId,
+      sender: notification.sender || "System",
+      title: notification.title,
+      message: notification.message,
+      type: notification.type || "system",
+      bookingId: notification.bookingId || null,
+      offerId: notification.offerId || null,
+      isRead: false,
+      createdAt: new Date().toISOString(),
+    };
+
+    await collection.insertOne(newNotification);
+
+    return true;
+  } catch (error) {
+    console.log(error.message);
+  }
+
+  return false;
+}
+
+async function getNotificationsByUser(userId) {
+  try {
+    const notifications = await db
+      .collection("notifications")
+      .find({ userId: userId })
+      .sort({ createdAt: -1 })
+      .toArray();
+
+    notifications.forEach(convertId);
+
+    return notifications;
+  } catch (error) {
+    console.log(error.message);
+  }
+
+  return [];
+}
+
+async function createNotification(notification) {
+  const notificationsCollection = db.collection("notifications");
+
+  const newNotification = {
+    userId: notification.userId,
+    sender: notification.sender || "System",
+    title: notification.title,
+    message: notification.message,
+    type: notification.type || "info",
+    bookingId: notification.bookingId || null,
+    offerId: notification.offerId || null,
+    offerTitle: notification.offerTitle || null,
+    bookingNumber: notification.bookingNumber || null,
+    isRead: false,
+    createdAt: new Date().toISOString(),
+    isMock: false,
+  };
+
+  const result = await notificationsCollection.insertOne(newNotification);
+
+  return result.insertedId.toString();
+}
+
+async function getNotificationsByUser(userId) {
+  try {
+    const notifications = await db
+      .collection("notifications")
+      .find({ userId: userId })
+      .sort({ createdAt: -1 })
+      .toArray();
+
+    notifications.forEach(convertId);
+
+    return notifications;
+  } catch (error) {
+    console.log(error.message);
+  }
+
+  return [];
+}
+
+async function getUnreadNotificationCount(userId) {
+  try {
+    return await db.collection("notifications").countDocuments({
+      userId: userId,
+      isRead: false,
+    });
+  } catch (error) {
+    console.log(error.message);
+  }
+
+  return 0;
+}
+
+async function markNotificationsAsRead(userId) {
+  try {
+    await db.collection("notifications").updateMany(
+      {
+        userId: userId,
+        isRead: false,
+      },
+      {
+        $set: {
+          isRead: true,
+          readAt: new Date().toISOString(),
+        },
+      },
+    );
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+async function removeBooking(bookingId, userId) {
+  try {
+    const collection = db.collection("bookings");
+
+    const result = await collection.deleteOne({
+      ...createIdQuery(bookingId),
+      customerId: userId,
+      status: "cancelled",
+    });
+
+    return result.deletedCount > 0;
+  } catch (error) {
+    console.log(error.message);
+  }
+
+  return false;
+}
+async function deleteNotification(notificationId, userId) {
+  try {
+    const collection = db.collection("notifications");
+
+    const result = await collection.deleteOne({
+      ...createIdQuery(notificationId),
+      userId: userId,
+    });
+
+    return result.deletedCount > 0;
+  } catch (error) {
+    console.log(error.message);
+  }
+
+  return false;
+}
+async function removeBookingSeries(repeatGroupId, userId) {
+  try {
+    const collection = db.collection("bookings");
+
+    const result = await collection.deleteMany({
+      repeatGroupId: repeatGroupId,
+      customerId: userId,
+      status: "cancelled",
+    });
+
+    return result.deletedCount > 0;
+  } catch (error) {
+    console.log(error.message);
+  }
+
+  return false;
+}
+
 export default {
   getFavoriteOfferIds,
   toggleFavorite,
@@ -815,7 +1003,15 @@ export default {
   getBookingsByOffer,
   getBookingsByUser,
   createRecurringBookingRequest,
+  removeBooking,
+  removeBookingSeries,
+  deleteNotification,
 
   getTrainingLocations,
   getTrainingLocationsBySport,
+
+  createNotification,
+  getNotificationsByUser,
+  getUnreadNotificationCount,
+  markNotificationsAsRead,
 };

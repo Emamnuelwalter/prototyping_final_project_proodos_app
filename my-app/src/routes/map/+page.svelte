@@ -1,18 +1,41 @@
 <script>
   import { enhance } from "$app/forms";
+  import { tick } from "svelte";
   import SearchBar from "$lib/components/search bar/SearchBar.svelte";
   import LeafletMap from "$lib/components/map/LeafletMap.svelte";
 
   let { data } = $props();
 
   let offers = $derived(data.offers || []);
+  let defaultMapOffers = $derived(data.defaultMapOffers || []);
   let user = $derived(data.user);
 
   let search = $state("");
+  let sortBy = $state("relevance");
   let searchFilteredOffers = $state([]);
   let searchIsActive = $state(false);
   let selectedOffer = $state(null);
   let visibleLimit = $state(5);
+  let resultPanel;
+
+  let baseVisibleOffers = $derived(
+    sortOffers(searchIsActive ? searchFilteredOffers : defaultMapOffers),
+  );
+
+  let visibleOffers = $derived.by(() => {
+    const visible = baseVisibleOffers.slice(0, visibleLimit);
+
+    if (!selectedOffer) {
+      return visible;
+    }
+
+    return [
+      selectedOffer,
+      ...visible.filter((offer) => {
+        return offer._id !== selectedOffer._id;
+      }),
+    ];
+  });
 
   function trainerName(offer) {
     return (
@@ -22,72 +45,89 @@
     ).trim();
   }
 
-  function matchesUserInterests(offer) {
-    if (!user || !user.interestedSports || user.interestedSports.length === 0) {
-      return true;
-    }
+  function isInterestedSport(offer) {
+    if (!user?.interestedSports) return false;
 
     return user.interestedSports.some((interest) => {
-      return (
-        offer.sport === interest.sport &&
-        offer.levels &&
-        offer.levels.includes(interest.level)
-      );
+      return interest.sport === offer.sport;
     });
   }
 
-  function offerScore(offer) {
-    let score = 0;
-
-    if (
-      user?.municipality &&
-      offer.location?.address?.municipality === user.municipality
-    ) {
-      score += 5;
+  function getNextDate(offer) {
+    if (!offer.availableTimes || offer.availableTimes.length === 0) {
+      return "9999-12-31";
     }
 
-    if (user?.canton && offer.location?.address?.canton === user.canton) {
-      score += 3;
-    }
+    return offer.availableTimes[0].date;
+  }
 
-    if (user?.interestedSports) {
-      user.interestedSports.forEach((interest) => {
-        if (offer.sport === interest.sport) {
-          score += 2;
-        }
+  function sortOffers(list) {
+    let sorted = [...list];
 
-        if (offer.levels?.includes(interest.level)) {
-          score += 1;
-        }
+    if (sortBy === "relevance") {
+      sorted.sort((a, b) => {
+        const aInterested = isInterestedSport(a);
+        const bInterested = isInterestedSport(b);
+
+        if (aInterested && !bInterested) return -1;
+        if (!aInterested && bInterested) return 1;
+
+        return 0;
       });
     }
 
-    if (offer.averageRating) {
-      score += Number(offer.averageRating) / 10;
+    if (sortBy === "location") {
+      sorted.sort((a, b) => {
+        const aIsMunicipality =
+          a.location?.address?.municipality === user?.municipality;
+        const bIsMunicipality =
+          b.location?.address?.municipality === user?.municipality;
+
+        if (aIsMunicipality && !bIsMunicipality) return -1;
+        if (!aIsMunicipality && bIsMunicipality) return 1;
+
+        return 0;
+      });
     }
 
-    return score;
+    if (sortBy === "rating") {
+      sorted.sort((a, b) => {
+        return Number(b.averageRating || 0) - Number(a.averageRating || 0);
+      });
+    }
+
+    if (sortBy === "priceLow") {
+      sorted.sort((a, b) => {
+        return Number(a.pricePerHour || 0) - Number(b.pricePerHour || 0);
+      });
+    }
+
+    if (sortBy === "priceHigh") {
+      sorted.sort((a, b) => {
+        return Number(b.pricePerHour || 0) - Number(a.pricePerHour || 0);
+      });
+    }
+
+    if (sortBy === "date") {
+      sorted.sort((a, b) => {
+        return getNextDate(a).localeCompare(getNextDate(b));
+      });
+    }
+
+    return sorted;
   }
 
-  let defaultOffers = $derived(
-    offers
-      .filter(matchesUserInterests)
-      .sort((a, b) => offerScore(b) - offerScore(a)),
-  );
-
-  let baseVisibleOffers = $derived(
-    searchIsActive ? searchFilteredOffers : defaultOffers,
-  );
-
-  let visibleOffers = $derived(baseVisibleOffers.slice(0, visibleLimit));
-
-  function selectOffer(offer) {
-    if (selectedOffer?._id === offer._id) {
-      selectedOffer = null;
-      return;
-    }
-
+  async function selectOffer(offer) {
     selectedOffer = offer;
+
+    await tick();
+
+    if (resultPanel) {
+      resultPanel.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    }
   }
 
   function showMoreOffers() {
@@ -109,25 +149,36 @@
       offer.location?.lng ||
       offer.location?.point?.coordinates?.[0];
 
-    if (lat && lng) {
-      return `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
-    }
-
-    const address = [
+    const destinationText = [
       offer.location?.name,
       offer.location?.address?.street,
       offer.location?.address?.postalCode,
       offer.location?.address?.municipality,
+      offer.location?.address?.canton,
+      "Schweiz",
     ]
       .filter(Boolean)
       .join(", ");
 
-    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
+    if (lat && lng) {
+      return (
+        "https://www.google.com/maps/dir/?api=1" +
+        `&destination=${encodeURIComponent(`${lat},${lng}`)}` +
+        `&travelmode=driving`
+      );
+    }
+
+    return (
+      "https://www.google.com/maps/dir/?api=1" +
+      `&destination=${encodeURIComponent(destinationText)}` +
+      `&travelmode=driving`
+    );
   }
 
   $effect(() => {
     searchIsActive;
     search;
+    sortBy;
 
     visibleLimit = searchIsActive ? 8 : 5;
     selectedOffer = null;
@@ -137,6 +188,19 @@
 <div class="container py-5">
   <h1 class="mb-2">Trainingsstandorte entdecken</h1>
   <p class="text-muted mb-4">Finden Sie passende Angebote auf der Karte.</p>
+
+  {#if !searchIsActive}
+    {#if !searchIsActive && data.mapMode === "sports"}
+      <div class="alert alert-info mb-4">
+        In Ihrem Kanton wurden keine Angebote gefunden. Es werden Angebote zu
+        Ihren Sportarten angezeigt.
+      </div>
+    {:else if !searchIsActive && data.mapMode === "all"}
+      <div class="alert alert-secondary mb-4">
+        Es werden alle verfügbaren Trainingsangebote angezeigt.
+      </div>
+    {/if}
+  {/if}
 
   <div class="map-search mb-4">
     <SearchBar
@@ -158,10 +222,24 @@
     </div>
 
     <div class="col-lg-4">
-      <div class="result-panel">
+      <div class="result-panel" bind:this={resultPanel}>
         <h4 class="mb-3">
-          {searchIsActive ? "Suchergebnisse" : "Passende Angebote"}
+          {searchIsActive ? "Suchergebnisse" : "Angezeigte Angebote"}
         </h4>
+        <select
+          class="form-select mb-3"
+          value={sortBy}
+          onchange={(event) => {
+            sortBy = event.target.value;
+          }}
+        >
+          <option value="relevance">Relevanz</option>
+          <option value="location">Standortnähe</option>
+          <option value="rating">Beste Bewertung</option>
+          <option value="priceLow">Preis aufsteigend</option>
+          <option value="priceHigh">Preis absteigend</option>
+          <option value="date">Nächster Termin</option>
+        </select>
 
         {#if visibleOffers.length > 0}
           <div class="result-list">
@@ -175,11 +253,19 @@
                 >
                   <strong>{offer.title}</strong>
                   <br />
+
                   <span>
                     {trainerName(offer)} · {offer.location?.name} ·
-                    {offer.pricePerHour}
-                    {offer.currency}/h
+                    {offer.location?.address?.municipality}
                   </span>
+
+                  <br />
+
+                  <small>
+                    {offer.sport} · {offer.pricePerHour}
+                    {offer.currency}/h
+                  </small>
+
                   <br />
 
                   {#if !offer.averageRating || offer.averageRating === 0}

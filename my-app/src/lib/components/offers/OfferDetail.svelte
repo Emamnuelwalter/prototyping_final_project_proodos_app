@@ -1,6 +1,7 @@
 <script>
   import { enhance } from "$app/forms";
   import { invalidateAll } from "$app/navigation";
+  import { getOfferImage, getTrainerImage } from "$lib/utils/images.js";
 
   let { offer } = $props();
 
@@ -14,10 +15,11 @@
 
 <div class="offer-detail">
   <img
-    src="/img/offers_placeholder.png"
-    alt="Trainingsangebot"
+    src={getOfferImage(offer.sport)}
+    alt={offer.sport}
     class="detail-img"
   />
+
   <div class="d-flex justify-content-between align-items-start gap-3 mt-4">
     <h1 class="mb-0">{offer.title}</h1>
     <form

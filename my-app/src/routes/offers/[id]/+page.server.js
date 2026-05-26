@@ -7,15 +7,6 @@ export async function load({ params, cookies }) {
   const offer = await db.getOffer(params.id);
   const reviews = await db.getReviewsByOffer(params.id);
   const userBookings = await db.getBookingsByUser(userId);
-  console.log("Offer Detail ID:", params.id);
-  console.log(
-    "User bookings:",
-    userBookings.map((booking) => ({
-      id: booking._id,
-      offerId: booking.offerId,
-      status: booking.status,
-    })),
-  );
 
   let isFavorite = false;
   let canReview = false;

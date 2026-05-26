@@ -72,6 +72,7 @@ export const actions = {
     }
 
     let bookingId = null;
+    let bookingNumber = null;
 
     if (wantsRepeat && repeatWeeks > 1) {
       bookingId = await db.createRecurringBookingRequest(
@@ -80,14 +81,31 @@ export const actions = {
         repeatMessage,
       );
     } else {
-      bookingId = await db.createBooking(booking);
+      const createdBooking = await db.createBooking(booking);
+
+      if (createdBooking) {
+        bookingId = createdBooking.id;
+        bookingNumber = createdBooking.bookingNumber;
+      }
     }
 
-    if (!bookingId) {
-      return fail(500, {
-        message: "Die Buchung konnte nicht gespeichert werden.",
-      });
-    }
+    const offer = await db.getOffer(params.offerId);
+
+    await db.createNotification({
+      userId: userId,
+      sender: "System",
+      title: wantsRepeat
+        ? "Wiederholungsanfrage gesendet"
+        : "Buchung bestätigt",
+      message: wantsRepeat
+        ? "Deine Wiederholungsanfrage wurde an den Trainer gesendet."
+        : "Deine Buchung wurde erfolgreich bestätigt.",
+      type: wantsRepeat ? "warning" : "success",
+      bookingId: bookingId,
+      offerId: params.offerId,
+      offerTitle: offer.title,
+      bookingNumber: bookingNumber,
+    });
 
     throw redirect(303, `/booking/success?bookingId=${bookingId}`);
   },

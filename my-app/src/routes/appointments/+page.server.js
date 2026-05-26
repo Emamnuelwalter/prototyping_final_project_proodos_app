@@ -1,11 +1,21 @@
 import { fail, redirect } from "@sveltejs/kit";
 import db from "$lib/db.js";
 
+function formatDateCH(dateString) {
+  if (!dateString) return "";
+
+  return new Date(dateString).toLocaleDateString("de-CH", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+}
+
 export async function load({ cookies }) {
   const userId = cookies.get("userId");
 
   if (!userId) {
-    throw redirect(303, "/create-profil");
+    throw redirect(303, "/login");
   }
 
   const bookings = await db.getBookingsByUser(userId);
@@ -31,37 +41,60 @@ export async function load({ cookies }) {
 
 export const actions = {
   cancel: async ({ request, cookies }) => {
-  const userId = cookies.get("userId");
+    const userId = cookies.get("userId");
 
-  if (!userId) {
-    throw redirect(303, "/create-profil");
-  }
+    if (!userId) {
+      throw redirect(303, "/login");
+    }
 
-  const data = await request.formData();
-  const bookingId = data.get("bookingId");
-  const repeatGroupId = data.get("repeatGroupId");
+    const data = await request.formData();
+    const bookingId = data.get("bookingId");
+    const repeatGroupId = data.get("repeatGroupId");
 
-  if (repeatGroupId) {
-    await db.deleteBookingSeries(repeatGroupId, userId);
-    throw redirect(303, "/appointments");
-  }
+    if (repeatGroupId) {
+      await db.deleteBookingSeries(repeatGroupId, userId);
 
-  if (!bookingId) {
-    return fail(400, {
-      message: "Der Termin konnte nicht storniert werden.",
+      await db.createNotification({
+        userId: userId,
+        sender: "System",
+        title: "Wiederholungsserie storniert",
+        message: "Deine Wiederholungsserie wurde storniert.",
+        type: "danger",
+        bookingId: null,
+        offerId: null,
+      });
+
+      throw redirect(303, "/appointments");
+    }
+
+    if (!bookingId) {
+      return fail(400, {
+        message: "Der Termin konnte nicht storniert werden.",
+      });
+    }
+
+    const booking = await db.getBooking(bookingId);
+
+    await db.deleteBooking(bookingId, userId);
+
+    await db.createNotification({
+      userId: userId,
+      sender: "System",
+      title: "Termin storniert",
+      message: `Dein Termin für "${booking?.offer?.title || "ein Training"}" am ${formatDateCH(booking?.date)} von ${booking?.startTime} bis ${booking?.endTime} wurde storniert.`,
+      type: "danger",
+      bookingId: bookingId,
+      offerId: booking?.offerId,
     });
-  }
 
-  await db.deleteBooking(bookingId, userId);
-
-  throw redirect(303, "/appointments");
-},
+    throw redirect(303, "/appointments");
+  },
 
   reschedule: async ({ request, cookies }) => {
     const userId = cookies.get("userId");
 
     if (!userId) {
-      throw redirect(303, "/create-profil");
+      throw redirect(303, "/login");
     }
 
     const data = await request.formData();
@@ -106,6 +139,58 @@ export const actions = {
       freeSlot.startTime,
       freeSlot.endTime,
     );
+
+    await db.createNotification({
+      userId: userId,
+      sender: "System",
+      title: "Termin verschoben",
+      message: `Dein Termin "${booking.offer?.title || "Training"}" findet neu am ${formatDateCH(freeSlot.date)} von ${freeSlot.startTime} bis ${freeSlot.endTime} Uhr statt.`,
+      type: "info",
+      bookingId: bookingId,
+      offerId: booking.offerId,
+      bookingNumber: booking?.bookingNumber,
+    });
+
+    throw redirect(303, "/appointments");
+  },
+
+  remove: async ({ request, cookies }) => {
+    const userId = cookies.get("userId");
+
+    if (!userId) {
+      throw redirect(303, "/login");
+    }
+
+    const data = await request.formData();
+    const bookingId = data.get("bookingId");
+
+    if (!bookingId) {
+      return fail(400, {
+        message: "Der Termin konnte nicht gelöscht werden.",
+      });
+    }
+
+    await db.removeBooking(bookingId, userId);
+
+    throw redirect(303, "/appointments");
+  },
+  removeSeries: async ({ request, cookies }) => {
+    const userId = cookies.get("userId");
+
+    if (!userId) {
+      throw redirect(303, "/login");
+    }
+
+    const data = await request.formData();
+    const repeatGroupId = data.get("repeatGroupId");
+
+    if (!repeatGroupId) {
+      return fail(400, {
+        message: "Die Serie konnte nicht gelöscht werden.",
+      });
+    }
+
+    await db.removeBookingSeries(repeatGroupId, userId);
 
     throw redirect(303, "/appointments");
   },

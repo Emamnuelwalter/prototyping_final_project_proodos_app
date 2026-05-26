@@ -14,4 +14,6 @@ export const cantonMunicipalities = {
   Bern: ["Bern", "Thun", "Biel/Bienne", "Köniz"],
   Luzern: ["Luzern", "Kriens", "Emmen", "Horw"],
   "St. Gallen": ["St. Gallen", "Rapperswil-Jona", "Wil"],
+  Zug: ["Zug", "Baar"],
+  Solothurn: ["Solothurn", "Olten"],
 };
