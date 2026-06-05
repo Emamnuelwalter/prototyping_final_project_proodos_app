@@ -1,6 +1,6 @@
 <div class="container py-5">
   <div class="home-box mx-auto text-center">
-    <h1 class="mb-3">Willkommen bei Proobos</h1>
+    <h1 class="mb-3">Willkommen bei Proodos</h1>
 
     <p class="text-muted mb-4">
       Finden Sie passende Trainer und Trainingsangebote in Ihrer Nähe.

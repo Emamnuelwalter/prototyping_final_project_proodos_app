@@ -3,4 +3,6 @@
   let { form } = $props();
 </script>
 
-<ProfileForm {form} />
+<div class="pt-4 pb-4">
+  <ProfileForm {form} />
+</div>

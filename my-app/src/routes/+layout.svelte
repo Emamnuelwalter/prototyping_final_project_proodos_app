@@ -31,7 +31,7 @@
           onclick={toggleProfileMenu}
           aria-label="Profilmenü öffnen"
         >
-          👤
+          <img src="/img/user.png" alt="" class="profile-icon" />
 
           {#if data.unreadNotificationCount > 0}
             <span class="notification-dot"></span>
@@ -141,14 +141,30 @@
     border: none;
     border-radius: 50%;
     background-color: #f1f3f5;
+    color: #212529;
     font-size: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
+    line-height: 1;
+    cursor: pointer;
+    position: relative;
+    padding: 0;
+    transition:
+      background-color 0.15s ease,
+      transform 0.15s ease;
   }
 
   .profile-button:hover {
     background-color: #e9ecef;
+    transform: translateY(-1px);
+  }
+
+  .profile-icon {
+    width: 26px;
+    height: 26px;
+    object-fit: contain;
+    display: block;
   }
 
   .profile-menu-wrapper {
@@ -185,6 +201,31 @@
   .profile-dropdown a:hover,
   .profile-dropdown button:hover {
     background-color: #f8f9fa;
+  }
+
+  .notification-dot {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 10px;
+    height: 10px;
+    background-color: #dc3545;
+    border-radius: 50%;
+    border: 2px solid white;
+  }
+
+  .notification-link {
+    display: flex !important;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .notification-count {
+    background-color: #dc3545;
+    color: white;
+    border-radius: 999px;
+    padding: 2px 7px;
+    font-size: 12px;
   }
 
   .app-main {
@@ -252,33 +293,5 @@
       gap: 12px;
       text-align: center;
     }
-  }
-  .profile-button {
-    position: relative;
-  }
-
-  .notification-dot {
-    position: absolute;
-    top: 6px;
-    right: 6px;
-    width: 10px;
-    height: 10px;
-    background-color: #dc3545;
-    border-radius: 50%;
-    border: 2px solid white;
-  }
-
-  .notification-link {
-    display: flex !important;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .notification-count {
-    background-color: #dc3545;
-    color: white;
-    border-radius: 999px;
-    padding: 2px 7px;
-    font-size: 12px;
   }
 </style>

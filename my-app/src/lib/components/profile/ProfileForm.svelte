@@ -37,7 +37,6 @@
   {/if}
 
   <form method="POST" action="?/create">
-  
     <div class="row">
       <div class="mb-3 col-md-6">
         <label for="username" class="form-label">

@@ -1,4 +1,4 @@
-# Projektdokumentation - Proboos App
+# Projektdokumentation - Proodos App
 
 ## Inhaltsverzeichnis
 
@@ -67,12 +67,18 @@ Trainingseinheiten können flexibel und kurzfristig gebucht sowie über eine Ter
 **Kernfunktionalität:**
 
 - Profilerstellung als Onboarding-Formular
-- Profilansicht
+- Dummy-Login für den Prototyp
+- Profilansicht und Profilbearbeitung
 - Suche nach Sporttrainer/-innen und Trainingsangeboten
-- Empfehlungen auf Basis von Sportart und Niveau
+- Empfehlungen auf Basis von Sportart, Niveau und Region
+- Sportkategorien mit passenden Bildern und Piktogrammen
 - Buchungsportal für verfügbare Termine
 - Terminübersicht unter „Meine Termine“
-- Möglichkeit, gebuchte Termine zu stornieren
+- Möglichkeit, gebuchte Termine zu stornieren oder zu verschieben
+- Wiederholungsbuchungen für mehrere Trainingswochen
+- Wunschstandort bei der Buchung
+- Kartenansicht mit Trainingsstandorten
+- Benachrichtigungen zu Buchung, Verschiebung und Stornierung
 - Bewertungssystem als vorbereitete Erweiterung
 
 **Workflow:**
@@ -84,11 +90,14 @@ Trainingseinheiten können flexibel und kurzfristig gebucht sowie über eine Ter
 5. Der User öffnet die Detailansicht eines Angebots.
 6. Das System zeigt die verfügbaren Termine des Trainers an.
 7. Der User wählt eine verfügbare Trainingsstunde aus.
-8. Das System prüft, ob der Termin noch verfügbar ist.
-9. Die Buchung wird gespeichert.
-10. Der User erhält eine Bestätigungsseite mit Buchungs-ID.
-11. Der gebuchte Termin wird im Bereich „Meine Termine“ angezeigt.
-12. Der User kann einen Termin bei Bedarf stornieren.
+8. Optional kann ein Wunschstandort angegeben werden.
+9. Das System prüft, ob der Termin noch verfügbar ist.
+10. Die Buchung wird gespeichert.
+11. Der User erhält eine Bestätigungsseite mit Buchungs-ID.
+12. Der gebuchte Termin wird im Bereich „Meine Termine“ angezeigt.
+13. Der User erhält eine Benachrichtigung zur Buchung.
+14. Der User kann einen Termin bei Bedarf stornieren oder verschieben.
+15. Bei wiederkehrenden Buchungen können einzelne Termine oder eine ganze Serie verwaltet werden.
 
 <img src="/my-app/static/img/Workflow.drawio.svg" alt="Worflow Prozess" width="400" height="800"/>
 
@@ -96,7 +105,7 @@ Trainingseinheiten können flexibel und kurzfristig gebucht sowie über eine Ter
 
 **Login und Anmeldung:**
 
-Im Prototyp wird kein vollständiger Registrierungsprozess per E-Mail umgesetzt. Stattdessen wird nach der Profilerstellung eine User-ID in einem Cookie gespeichert. Dadurch kann der Prototyp den aktuellen User simulieren.
+Im Prototyp wird kein vollständiger Registrierungsprozess per E-Mail umgesetzt. Stattdessen wird ein vereinfachter Dummy-Login verwendet und eine User-ID in einem Cookie gespeichert. Dadurch kann der Prototyp den aktuellen User simulieren.
 
 **Zahlungsportal:**
 
@@ -104,7 +113,11 @@ Die Implementierung eines Zahlungsprozesses, z. B. via TWINT oder Kreditkarte, i
 
 **Trainerbereich:**
 
-Ein eigener Trainerbereich zur Verwaltung von Angeboten, Verfügbarkeiten und Buchungsanfragen ist als Erweiterung vorgesehen, wird im aktuellen Prototyp jedoch nicht umgesetzt.
+Ein eigener Trainerbereich zur Verwaltung von Angeboten, Verfügbarkeiten und Buchungsanfragen wurde im aktuellen Prototyp nicht umgesetzt.
+
+**Trainerbestätigung:**
+
+Eine manuelle Bestätigung von Buchungsanfragen durch Trainer wurde nicht umgesetzt. Im Prototyp werden Buchungen direkt bestätigt.
 
 ## 3. Vorgehen & Artefakte
 
@@ -133,7 +146,6 @@ Die Zielgruppen wurden in vier Gruppen unterteilt.
   - Authentische Bewertungen einsehen
 - **Persona:** Luka (21), Student, hat nicht immer Zeit, regelmässig ins Fitnessstudio zu gehen, möchte aber Fortschritte machen. Er hat keine Zeit, einen passenden Fitnesstrainer zu finden, und findet keine authentischen Bewertungen.
 - **Typische Sportarten:** Fitness, Gym usw.
-</details>
 
 **Hobbysportler/-innen**
 
@@ -168,7 +180,6 @@ Die Zielgruppen wurden in vier Gruppen unterteilt.
 - **Persona:** Yannick (24) läuft seit mehreren Jahren Marathon und trainiert regelmässig. Er möchte sich für seinen nächsten Marathon vorbereiten, hat aber keine Erfahrung mit Profitrainern und weiss nicht, wo er passende Unterstützung findet.
 - **Typische Sportarten:** Marathon, Bergsteigen usw.
 
-
 **Profisportler/-innen**
 
 - **Alter:** 18 bis 40 Jahre
@@ -186,7 +197,6 @@ Die Zielgruppen wurden in vier Gruppen unterteilt.
 - **Persona:** Linda (28) ist professionelle Skispringerin. Um konkurrenzfähig zu bleiben, absolviert sie regelmässig Krafttraining. Während eines Aufenthalts bei ihren Eltern in der Westschweiz sucht sie einen qualifizierten Krafttrainer, der sie auf Basis ihres Trainingsrapports unterstützen kann.
 - **Typische Sportarten:** Skispringen, Tennis, Ski Alpin, Fussball usw.
 
-
 **Wesentliche Erkenntnisse:**
 
 - Vertrauen in Trainer ist ohne Bewertungen oder Referenzen gering.
@@ -203,7 +213,6 @@ Die Zielgruppen wurden in vier Gruppen unterteilt.
 
 In der Sketch-Phase wurden mehrere Varianten für den Aufbau der App und den Hauptworkflow skizziert.
 
-<!-- TODO Skizzenbilder hier einfügen -->
 Skizze 1 (Crazy 8's)
 
 <img src="/my-app/static/img/Screenshots/skizze_sketch_2.png" alt="Sketch 1" width="400" height="auto">
@@ -212,12 +221,11 @@ Skizze 2 (Skizze inkl. Workflow)
 
 <img src="/my-app/static/img/Screenshots/skizze_sketch_1.png" alt="Sketch 2" width="400" height="auto">
 
-
 **Skizzen:**
 
 In der ersten Skizze wurden mehrere wichtige Funktionen einbezogen. Im Gruppencoaching konnte besonders die Terminansicht und die Möglichkeit, Termine des Trainers einzusehen, aufgegriffen werden.
 
-In der zweiten Skizze inkl Workflow wurde zusätzlich die Benachrichtigungsfunktion skizziert. Die Nachrichtenfunktion wurde später entfernt, da sie für den Mindestumfang zu umfangreich gewesen wäre.
+In der zweiten Skizze inkl. Workflow wurde zusätzlich die Benachrichtigungsfunktion skizziert. Eine vollumfängliche Nachrichtenfunktion wurde später entfernt, da sie für den Mindestumfang zu umfangreich gewesen wäre. Stattdessen wurden einfache System-Benachrichtigungen umgesetzt.
 
 ### 3.3 Decide
 
@@ -227,15 +235,13 @@ Nach dem Input im Gruppencoaching wurde entschieden, die Nachrichtenfunktion weg
 
 Die Entscheidung gegen eine vollumfängliche Nachrichtenfunktion wurde getroffen, weil diese den Rahmen des Prototyps sprengen würde. Der Fokus sollte auf den Funktionen liegen, die den Mehrwert der App direkt zeigen.
 
-Eine Kartenansicht wurde als sinnvolle Erweiterung identifiziert. Sie würde die Suche nach Angeboten in der Nähe verbessern und die Benutzerfreundlichkeit weiter erhöhen. Für den Mindestumfang wurde diese Funktion jedoch nicht umgesetzt.
- 
+Eine Kartenansicht wurde als sinnvolle Erweiterung identifiziert. Sie verbessert die Suche nach Angeboten in der Nähe und erhöht die Benutzerfreundlichkeit.
+
 **Use-Case-Diagramm**
 
 Das Use-Case-Diagramm zeigt die wichtigsten Funktionen der Anwendung und die beteiligten Rollen. Im Mindestumfang liegt der Fokus auf dem User, der ein Profil erstellt, Angebote durchsucht und Termine bucht. Trainer- und Admin-Funktionen sind als mögliche Erweiterungen vorgesehen.
 
-
-<img src="/my-app/static/img/Use Case Diagramm.svg" alt="Use-Case-Diagramm Proboos" width="400" height="auto">
-
+<img src="/my-app/static/img/Use Case Diagramm.svg" alt="Use-Case-Diagramm Proodos" width="400" height="auto">
 
 **End-to-End-Ablauf:**
 
@@ -248,13 +254,13 @@ Das Use-Case-Diagramm zeigt die wichtigsten Funktionen der Anwendung und die bet
 7. Die Buchung wird im System gespeichert.
 8. Der User erhält eine Bestätigungsseite.
 9. Der gebuchte Termin wird im Bereich „Meine Termine“ angezeigt.
-10. Der User kann den Termin bei Bedarf stornieren.
+10. Der User kann den Termin bei Bedarf stornieren oder verschieben.
 
 **User Journey Map:**
 
 Die User Journey Map zeigt den Ablauf aus Sicht des Users vom Einstieg bis zur Buchung.
-<img src="/my-app/static/img/Proobos User Journey Map.jpg" alt="Desktop-Detailansicht" width="400" height="auto">
 
+<img src="/my-app/static/img/Proobos User Journey Map.jpg" alt="User Journey Map" width="400" height="auto">
 
 **Mockup:**
 
@@ -262,39 +268,31 @@ https://www.figma.com/proto/WeAMfqd8XFX7e8SgEoxRPi/Prodos-App-und-Web
 
 Im Mockup werden auf der Hauptseite Trainingsangebote in der Nähe der Gemeinde des Users angezeigt. Der User kann nach Sportarten, Trainern oder Standorten suchen. Zusätzlich sind Filter vorgesehen, zum Beispiel nach Niveau oder Mindestbewertung.
 
-In der erweiterten Verison werden in der Kartenansicht Trainer im Umkreis der Gemeinde des Users angezeigt. Bei der Auswahl einer Karte gelangt der User direkt zur Detailansicht des Angebots und kann dort einen Termin buchen.
-
 In der Profilansicht sieht der User seine eigenen Profildaten. Auf Basis der interessierten Sportarten werden passende Trainer und Angebote vorgeschlagen.
 
 Unter „Meine Termine“ kann der User seine gebuchten Termine ansehen und stornieren.
-<!-- TODO Screenshots aus dem Figma-Mockup hier einfügen -->
-**Screnshots** 
+
+**Screenshots**
 
 Hauptseite
 
 <img src="/my-app/static/img/Screenshots/Trainingsangebote_Ansicht.png" alt="Desktop-Detailansicht" width="400" height="auto">
 
-
 Angebot Detailansicht
 
 <img src="/my-app/static/img/Screenshots/Desktop_detailansicht.png" alt="Desktop-Detailansicht" width="400" height="auto">
-
 
 Bewertungen
 
 <img src="/my-app/static/img/Screenshots/Detailansicht_reviews_desktop.png" alt="Detailansicht-Reviews" width="400" height="auto">
 
-
 Termin Auswahl Ansicht
 
 <img src="/my-app/static/img/Screenshots/Kalenderauswahl_desktop.png" alt="Desktop-Kalenderauswahl" width="400" height="auto">
 
-
-Buchungsbestätig
+Buchungsbestätigung
 
 <img src="/my-app/static/img/Screenshots/Confromation_page.png" alt="Desktop-Buchungsbestätigung" width="400" height="auto">
-
-
 
 ### 3.4 Prototype
 
@@ -304,15 +302,15 @@ Buchungsbestätig
 
 **Navigationsleiste:**
 
-Nach der Profilerstellung hat der User über die Navigation Zugriff auf die Hauptseite „Durchsuchen“, „Sportkategorien“, „Meine Termine“ und „Mein Profil“. Vor der Profilerstellung wird nur das Logo angezeigt.
+Nach der Profilerstellung hat der User über die Navigation Zugriff auf die Hauptseite „Angebote“, „Sportkategorien“, „Karte“, „Meine Termine“, „Benachrichtigungen“ und „Mein Profil“. Vor der Anmeldung sind nur die Startseite, Login, Profilerstellung und Info-Seite zugänglich.
 
 **Startseite:**
 
-Auf der Startseite wird der User mit einem Karten-Element begrüsst und aufgefordert, ein Profil zu erstellen.
+Auf der Startseite wird der User mit einem Karten-Element begrüsst und aufgefordert, ein Profil zu erstellen oder sich einzuloggen.
 
 **Hauptseite:**
 
-Die Hauptseite zeigt dem User zunächst vier Trainingsangebote, die seinem Profil entsprechen. Über den Button „Mehr anzeigen“ werden weitere Angebote eingeblendet. Die Angebotskarten zeigen Preis, Standort, Niveau und den Namen des Trainers.
+Die Hauptseite zeigt dem User Trainingsangebote, die seinem Profil entsprechen. Die Angebotskarten zeigen Preis, Standort, Niveau und den Namen des Trainers.
 
 **Detailansicht Trainingsangebot:**
 
@@ -320,25 +318,31 @@ Auf dieser Seite werden weitere Informationen zum Kurs angezeigt, zum Beispiel B
 
 **Meine Termine:**
 
-Die Termine werden wie auf der Hauptseite in Karten dargestellt. Die Karten enthalten die wichtigsten Informationen zum Termin. Mit dem Button „Angebot ansehen“ kann die Detailansicht des Angebots erneut geöffnet werden. Zusätzlich kann ein Termin storniert werden.
+Die Termine werden wie auf der Hauptseite in Karten dargestellt. Die Karten enthalten die wichtigsten Informationen zum Termin. Zusätzlich kann ein Termin verwaltet, verschoben oder storniert werden.
+
+**Karte:**
+
+Die Kartenansicht zeigt Trainingsstandorte im Kanton des Users. Angebote können auf der Karte ausgewählt werden. Die rechte Ergebnisliste zeigt passende Angebote und kann nach Relevanz, Standort, Bewertung, Preis oder nächstem Termin sortiert werden.
+
+**Benachrichtigungen:**
+
+Die Benachrichtigungsseite zeigt Systemmeldungen zu Buchungen, Verschiebungen und Stornierungen. Die Nachrichten enthalten u. a. Angebot, Buchungsnummer und Datum.
 
 **User Interface Design:**
 
 **Suchfunktion:**
 
-Die Suchfunktion kann auf der Hauptseite genutzt werden und ermöglicht dem User, nach Sportarten, Trainern oder Standorten zu suchen.
-
-
+Die Suchfunktion kann auf der Hauptseite und in der Karte genutzt werden und ermöglicht dem User, nach Sportarten, Trainern oder Standorten zu suchen.
 
 **Profilerstellung:**
 
-Die Profilerstellung ist als standardmässiges Formular umgesetzt. Der User wird mit einer roten „*“-Markierung auf Pflichtfelder hingewiesen. Zusätzlich wird ein Hinweis angezeigt, dass im Prototyp keine echten Personendaten eingegeben werden sollen.
+Die Profilerstellung ist als standardmässiges Formular umgesetzt. Der User wird mit einer roten „\*“-Markierung auf Pflichtfelder hingewiesen. Zusätzlich wird ein Hinweis angezeigt, dass im Prototyp keine echten Personendaten eingegeben werden sollen.
 
 <img src="/my-app/static/img/Screenshots/prototype_form_page.png" alt="Profil-Form" width="400" height="auto">
 
 **Profil:**
 
-In der Profilansicht sieht der User alle relevanten Informationen seines erstellten Profils. Er kann in dieser Ansicht auch sein Profil löschen. Dadurch wird er zurück auf die Startseite geleitet und kann bei Bedarf ein neues Profil erstellen.
+In der Profilansicht sieht der User alle relevanten Informationen seines erstellten Profils. Er kann seine Profildaten bearbeiten oder sein Profil löschen.
 
 <img src="/my-app/static/img/Screenshots/prototype_profile_page.png" alt="Profil-Page" width="400" height="auto">
 
@@ -352,25 +356,25 @@ Die Terminauswahl ist in zwei Schritte aufgeteilt. Der User wählt zuerst einen 
 
 **Terminauswahl:**
 
-Im Mockup war ursprünglich eine Kalenderansicht geplant. Diese Umsetzung wäre technisch aufwändiger gewesen. Deshalb wurde für den Prototyp eine einfachere Lösung mit Datum-Buttons und Uhrzeit-Buttons umgesetzt. Diese Variante ist einfacher zu bedienen und erfüllt den Zweck des Prototyps.
+Im Mockup war ursprünglich eine Kalenderansicht geplant. Diese Umsetzung wäre technisch aufwändiger gewesen. Deshalb wurde für den Prototyp eine einfachere Lösung mit Datum-Buttons und Uhrzeit-Buttons umgesetzt.
 
 **Profil:**
 
-Für den Mindestumfang wurde entschieden, dass das Profil nach der Erstellung nicht bearbeitet werden kann. Die interessierten Sportarten werden als Labels dargestellt, damit sie sich optisch von den übrigen Profildaten abheben.
+Das Profil kann im Prototyp bearbeitet werden. Standort, Gemeinde und interessierte Sportarten haben Einfluss auf die angezeigten Angebote und die Kartenansicht.
 
 **Bewertungen:**
 
-Das Schreiben von Bewertungen ist im Mindestumfang nicht implementiert. Bewertungen sind in den Mockdaten vorbereitet und können als Erweiterung umgesetzt werden.
+Das Schreiben von Bewertungen ist nicht vollständig implementiert. Bewertungen sind jedoch in den Mockdaten vorbereitet und in der Detailansicht sichtbar.
 
 **Kartenansicht:**
 
-Die Kartenansicht mit einer externen Karten-API ist im Mindestumfang nicht implementiert. Sie wird als mögliche Erweiterung vorgesehen.
+Die Kartenansicht wurde mit Leaflet und OpenStreetMap umgesetzt. Dadurch können Trainingsstandorte geografisch dargestellt werden.
 
 #### 3.4.2. Umsetzung (Technik)
 
 **Technologie-Stack:**
 
-Die App wurde mit SvelteKit umgesetzt. Für die Gestaltung wird Bootstrap verwendet. Die Daten werden in MongoDB gespeichert. Die Anwendung ist als Web-App aufgebaut und soll auf Desktop, Tablet und Mobile nutzbar sein.
+Die App wurde mit SvelteKit umgesetzt. Für die Gestaltung wird Bootstrap verwendet. Die Daten werden in MongoDB gespeichert. Für die Karte wird Leaflet mit OpenStreetMap genutzt. Die Anwendung ist als Web-App aufgebaut und soll auf Desktop, Tablet und Mobile nutzbar sein.
 
 **Tooling:**
 
@@ -382,127 +386,133 @@ Die Entwicklung erfolgte lokal in Visual Studio Code. Für die Datenbank wurde M
 
 **Startseite (`/`):**
 
-Die Startseite ist der Einstiegspunkt der Anwendung. Der User wird aufgefordert, zuerst ein Profil zu erstellen. Wenn bereits ein Profil vorhanden ist, wird der User über die serverseitige Logik automatisch auf die Angebotsübersicht weitergeleitet. Dadurch gelangt ein registrierter User nicht erneut unnötig auf die Einstiegsseite.
+Die Startseite ist der Einstiegspunkt der Anwendung. Der User kann sich einloggen oder ein Profil erstellen.
 
 **Create-profil (`/create-profil`):**
 
-Auf dieser Seite füllt der User ein Formular zur Profilerstellung aus. Die eingegebenen Daten werden serverseitig verarbeitet und in MongoDB gespeichert. Nach erfolgreicher Speicherung wird die User-ID in einem Cookie gespeichert, damit die App weiss, welcher User aktuell verwendet wird. Danach wird der User automatisch auf die Offers-Seite weitergeleitet.
+Auf dieser Seite füllt der User ein Formular zur Profilerstellung aus. Die eingegebenen Daten werden serverseitig verarbeitet und in MongoDB gespeichert.
+
+**Login (`/login`):**
+
+Für den Prototyp wurde ein Dummy-Login umgesetzt. Dadurch kann ein bestehender User simuliert werden.
 
 **Profil (`/profil`):**
 
-Auf dieser Seite sieht der User die gespeicherten Informationen seines Kontos. Die Profildaten werden anhand der gespeicherten User-ID aus der Datenbank geladen. Zusätzlich kann der User sein Konto löschen. Beim Löschen werden auch die zugehörigen Buchungen entfernt und der User wird zurück zur Startseite geleitet.
+Auf dieser Seite sieht der User seine gespeicherten Informationen. Zusätzlich können die Profildaten bearbeitet und das Konto gelöscht werden.
 
 **Offers (`/offers`):**
 
-Die Offers-Seite ist die Hauptseite der Anwendung. Dort werden Trainingsangebote angezeigt, die zum Profil des Users passen. Die Filterung basiert auf den interessierten Sportarten und dem Niveau des Users. Zusätzlich gibt es einen Bereich mit weiteren empfohlenen Angeboten. Über die Suchfunktion kann der User nach Sportart, Trainer, Standort, Gemeinde oder Kanton suchen. Die Angebote werden aus MongoDB geladen und als Karten dargestellt.
+Die Offers-Seite ist die Hauptseite der Anwendung. Dort werden Trainingsangebote angezeigt, die zum Profil des Users passen. Die Sortierung basiert auf Sportarten, Niveau und Region.
+
+**Sportkategorien (`/categories`):**
+
+Die Sportarten werden aus einer zentralen Datei geladen und alphabetisch dargestellt. Jede Sportart erhält ein passendes Bild bzw. Piktogramm.
 
 **Detailansicht (`/offers/[id]`):**
 
-Die Detailansicht zeigt alle wichtigen Informationen zu einem einzelnen Trainingsangebot. Dazu gehören Beschreibung, Anforderungen, Preis, Niveau, Standort, Bewertung und Informationen zum Trainer. Von dieser Seite aus kann der User über den Button „Jetzt buchen“ zur Buchungsseite wechseln.
+Die Detailansicht zeigt alle wichtigen Informationen zu einem einzelnen Trainingsangebot. Dazu gehören Beschreibung, Anforderungen, Preis, Niveau, Standort, Bewertung und Informationen zum Trainer.
 
 **Booking (`/booking/[offerId]`):**
 
-Die Buchungsseite zeigt dem User die verfügbaren Termine eines Trainingsangebots. Bereits gebuchte Termine werden nicht mehr als auswählbare Option angezeigt. Der User wählt zuerst ein Datum und danach eine passende Uhrzeit. Zusätzlich wird der Standort angezeigt und eine Zusammenfassung der Buchung dargestellt. Beim Absenden wird serverseitig nochmals geprüft, ob der Termin noch frei ist. Danach wird die Buchung in MongoDB gespeichert.
+Die Buchungsseite zeigt verfügbare Termine eines Trainingsangebots. Bereits gebuchte Termine werden nicht mehr als auswählbare Option angezeigt. Zusätzlich kann ein Wunschstandort angegeben werden.
 
 **Buchungsbestätigung (`/booking/success`):**
 
-Nach erfolgreicher Buchung gelangt der User auf die Bestätigungsseite. Dort werden das gebuchte Angebot, der Trainer, der Termin und die Buchungs-ID angezeigt. Die Seite gibt dem User eine klare Rückmeldung, dass die Buchung erfolgreich abgeschlossen wurde.
+Nach erfolgreicher Buchung gelangt der User auf die Bestätigungsseite. Dort werden das gebuchte Angebot, der Trainer, der Termin und die Buchungs-ID angezeigt.
 
 **Appointments (`/appointments`):**
 
-Auf dieser Seite sieht der User seine gebuchten Termine. Die Buchungen werden anhand der gespeicherten User-ID aus der Datenbank geladen. Der User kann einen Termin stornieren. Für den Prototyp bedeutet Stornieren, dass die Buchung direkt aus der Datenbank gelöscht wird. Vor dem Löschen erscheint eine kurze Bestätigung, damit der Termin nicht versehentlich entfernt wird.
+Auf dieser Seite sieht der User seine gebuchten Termine. Einzelne Termine können storniert, verschoben oder bei Wiederholungsbuchungen als Teil einer Serie verwaltet werden.
+
+**Map (`/map`):**
+
+Die Kartenansicht zeigt Trainingsstandorte. Marker können ausgewählt werden und öffnen das zugehörige Angebot in der Ergebnisliste.
+
+**Notifications (`/notifications`):**
+
+Die Benachrichtigungsseite zeigt Systemmeldungen zu Buchungen, Verschiebungen und Stornierungen.
 
 **Komponenten:**
-
-**ProfileForm und ProfileCard:**
-
-`my-app/src/lib/components/profile/ProfileForm.svelte`  
-`my-app/src/lib/components/profile/ProfileCard.svelte`
-
-ProfileForm wird für die Erstellung des Profils verwendet. Das Formular erfasst Vorname, Nachname, Geburtsdatum, E-Mail, Telefonnummer, Kanton, Gemeinde und drei interessierte Sportarten mit Niveau. Die Auswahl von Kanton und Gemeinde ist abhängig voneinander. Wenn ein Kanton ausgewählt wird, werden nur die passenden Gemeinden angezeigt.
-
-ProfileCard zeigt die gespeicherten Profildaten in einer readonly Ansicht an. Dadurch können die Informationen sauber dargestellt werden, ohne dass sie direkt bearbeitet werden.
 
 **OfferCard:**
 
 `my-app/src/lib/components/offers/OfferCard.svelte`
 
-Die OfferCard zeigt ein einzelnes Trainingsangebot als Karte an. Sie enthält die wichtigsten Informationen für die erste Auswahl, zum Beispiel Titel, Trainername, Niveau, Standort, Gemeinde/Kanton und Preis pro Stunde. Die Karte ist mit der Detailseite des Angebots verlinkt.
+Die OfferCard zeigt ein einzelnes Trainingsangebot als Karte an. Sie enthält die wichtigsten Informationen für die erste Auswahl.
 
 **OfferList:**
 
 `my-app/src/lib/components/offers/OfferList.svelte`
 
-Die OfferList zeigt mehrere Angebote in einem Bootstrap-Grid-System an. Zu Beginn werden nur vier Angebote angezeigt. Über den Button „Mehr anzeigen“ kann der User weitere Angebote einblenden und mit „Weniger anzeigen“ wieder reduzieren. Dadurch bleibt die Seite übersichtlich.
+Die OfferList zeigt mehrere Angebote in einem Bootstrap-Grid-System an.
 
 **OfferDetail:**
 
 `my-app/src/lib/components/offers/OfferDetail.svelte`
 
-Die Komponente strukturiert die Detailansicht eines Angebots. Sie zeigt Beschreibung, Anforderungen, Preis, Niveau, Standort und Bewertung. Dadurch bleiben die Informationen auf der Detailseite übersichtlich gegliedert.
+Die Komponente strukturiert die Detailansicht eines Angebots.
 
 **SearchBar:**
 
-`my-app/src/lib/components/SearchBar.svelte`
+`my-app/src/lib/components/search bar/SearchBar.svelte`
 
-Die SearchBar ermöglicht eine globale Suche über alle geladenen Angebote. Die Suche durchsucht Angebotstitel, Sportart, Trainername, Standort, Gemeinde und Kanton. Passende Resultate werden direkt unter dem Suchfeld angezeigt. Wenn der User ein Resultat auswählt, gelangt er direkt zur Detailansicht des Angebots.
+Die SearchBar ermöglicht eine Suche über Sportarten, Trainer, Standort, Gemeinde, Kanton, Niveau, Datum, Preis und Bewertung.
 
-**DateSelect und TimeSlotSelect:**
+**LeafletMap:**
 
-`my-app/src/lib/components/booking/DateSelect.svelte`  
-`my-app/src/lib/components/booking/TimeSlotSelect.svelte`
+`my-app/src/lib/components/map/LeafletMap.svelte`
 
-DateSelect zeigt die verfügbaren Tage eines Trainingsangebots als auswählbare Buttons an. TimeSlotSelect zeigt danach die verfügbaren Uhrzeiten zum ausgewählten Datum. Dadurch wird der Buchungsprozess Schritt für Schritt geführt.
+LeafletMap zeigt Angebote auf einer interaktiven Karte an.
 
 **BookingSummary und BookingConfirmation:**
 
 `my-app/src/lib/components/booking/BookingSummary.svelte`  
 `my-app/src/lib/components/booking/BookingConfirmation.svelte`
 
-BookingSummary fasst vor dem Absenden der Buchung die wichtigsten Angaben zusammen. BookingConfirmation wird nach erfolgreicher Buchung verwendet und zeigt dem User eine Bestätigung mit Angebot, Trainer, Termin und Buchungs-ID.
+BookingSummary fasst vor dem Absenden der Buchung die wichtigsten Angaben zusammen. BookingConfirmation wird nach erfolgreicher Buchung verwendet.
 
 **AppointmentCard und AppointmentList:**
 
 `my-app/src/lib/components/appointments/AppointmentCard.svelte`  
 `my-app/src/lib/components/appointments/AppointmentList.svelte`
 
-AppointmentList zeigt alle gebuchten Termine des Users an. AppointmentCard stellt einen einzelnen Termin als Karte dar und enthält die Möglichkeit, den Termin zu stornieren. Dadurch kann der User seine gebuchten Termine einfach verwalten.
+AppointmentList zeigt alle gebuchten Termine des Users an. AppointmentCard stellt einen einzelnen Termin als Karte dar und enthält Verwaltungsfunktionen.
 
 **Daten & Schnittstellen:**
 
-Die Daten der Proboos App werden in MongoDB gespeichert und verwaltet. Die Schnittstelle zwischen der SvelteKit-Anwendung und der Datenbank erfolgt über die Datei `my-app/src/lib/db.js`. In dieser Datei befinden sich die wichtigsten asynchronen Funktionen für den Datenzugriff, zum Beispiel zum Laden von Angeboten, Speichern von Profilen, Erstellen von Buchungen oder Löschen von Terminen.
+Die Daten der Proodos App werden in MongoDB gespeichert und verwaltet. Die Schnittstelle zwischen der SvelteKit-Anwendung und der Datenbank erfolgt über die Datei `my-app/src/lib/db.js`. In dieser Datei befinden sich die wichtigsten asynchronen Funktionen für den Datenzugriff.
 
-Die eigentliche Verarbeitung findet in den jeweiligen `+page.server.js` Dateien statt. Diese Dateien rufen die Funktionen aus `db.js` auf und geben die geladenen Daten an die passenden `+page.svelte` Seiten weiter. Dadurch bleibt die Datenbanklogik vom sichtbaren Frontend getrennt.
+Die eigentliche Verarbeitung findet in den jeweiligen `+page.server.js` Dateien statt. Diese Dateien rufen die Funktionen aus `db.js` auf und geben die geladenen Daten an die passenden `+page.svelte` Seiten weiter.
 
 **Datenstruktur:**
 
-Die Daten werden in MongoDB in verschiedenen Collections gespeichert. Für den Mindestumfang sind vor allem `users`, `trainingOffers`, `trainingLocations` und `bookings` relevant. Die Collection `reviews` wird für Bewertungen genutzt. Die Collection `messages` ist in den Mockdaten vorbereitet, wird im aktuellen Mindestumfang aber noch nicht aktiv verwendet.
+Die Daten werden in MongoDB in verschiedenen Collections gespeichert. Für den Prototyp sind vor allem folgende Collections relevant:
+
+- `users`
+- `trainingOffers`
+- `trainingLocations`
+- `bookings`
+- `reviews`
+- `notifications`
+- `favorites`
 
 <img src="/my-app/static/img/MongoDb Structure.svg" alt="MongoDb-Struktur" width="400" height="auto">
 
 **Mockdaten:**
 
-Die Mockdaten dienen dazu, den Prototyp mit realistischen Beispieldaten zu testen. In den JSON-Dateien kann die Datenstruktur der einzelnen Collections nachvollzogen werden.
+Die Mockdaten dienen dazu, den Prototyp mit realistischen Beispieldaten zu testen. Die Mockdaten enthalten User, Trainer, Trainingsangebote, Standorte, Bewertungen und Termine.
 
 Ordner: `json_mockdata`
 
 **Wichtige Metadaten zu den Mockdaten:**
 
-- Anzahl Users: 26
-- Training Locations: 10
-- Trainingsangebote: 22
-- Buchungen: 18
-- Bewertungen: 7
-- Nachrichten: 18
-
-**Auswahl von Sportarten:**
-
-- Krafttraining
-- Tennis
-- Schwimmen
-- Boxen
-- Yoga
-- Golf
+- Users und Trainer
+- Training Locations
+- Trainingsangebote
+- Buchungen
+- Bewertungen
+- Benachrichtigungen
+- Favoriten
 
 **Speicherung eines neuen Profils:**
 
@@ -510,41 +520,35 @@ Datei: `my-app/src/routes/create-profil/+page.server.js`
 
 Für die Speicherung eines neuen Profils wird eine serverseitige `action` verwendet. Die eingegebenen Formularwerte werden über `request.formData()` ausgelesen und zu einem neuen User-Objekt zusammengesetzt. Dieses Objekt wird anschliessend mit der Funktion `createUser()` in MongoDB gespeichert.
 
-Nach dem Speichern erstellt MongoDB eine eindeutige ID für den User. Diese ID wird als Cookie im Browser gespeichert. Dadurch weiss die App bei späteren Seitenaufrufen, welcher User aktuell aktiv ist. So können zum Beispiel das Profil, passende Angebote und gebuchte Termine automatisch dem richtigen User zugeordnet werden.
-
 **Laden der Angebote anhand des Profils:**
 
 Datei: `my-app/src/routes/offers/+page.server.js`
 
-Auf der Offers-Seite werden zuerst der aktive User und alle Trainingsangebote aus der Datenbank geladen. Danach werden die Angebote mit den Interessen des Users verglichen. Dabei werden die gewählten Sportarten und das Niveau berücksichtigt. Passende Angebote werden im oberen Bereich angezeigt. Zusätzlich werden weitere Angebote als Empfehlungen dargestellt.
+Auf der Offers-Seite werden zuerst der aktive User und alle Trainingsangebote aus der Datenbank geladen. Danach werden die Angebote mit den Interessen und dem Standort des Users verglichen.
 
 **Terminauswahl und Speicherung der Buchung:**
 
 Datei: `my-app/src/routes/booking/[offerId]/+page.server.js`
 
-Bei der Buchung lädt der Server das ausgewählte Angebot und die bereits bestehenden Buchungen für dieses Angebot. Dadurch kann geprüft werden, welche Termine noch verfügbar sind. Bereits gebuchte Termine werden im Frontend nicht mehr als auswählbare Option angezeigt.
-
-Beim Absenden der Buchung prüft die serverseitige `action` nochmals, ob Datum und Uhrzeit ausgewählt wurden und ob der Termin noch frei ist. Wenn der Termin verfügbar ist, werden die Buchungsdaten an `createBooking()` übergeben. Diese Funktion speichert die Buchung als neuen Eintrag in der Collection `bookings`.
+Bei der Buchung lädt der Server das ausgewählte Angebot und die bereits bestehenden Buchungen für dieses Angebot. Dadurch kann geprüft werden, welche Termine noch verfügbar sind. Die Buchung wird anschliessend in MongoDB gespeichert und erhält eine Buchungsnummer.
 
 **Meine Termine:**
 
 Datei: `my-app/src/routes/appointments/+page.server.js`
 
-Die Seite „Meine Termine“ lädt alle Buchungen des aktiven Users. Dafür wird die im Cookie gespeicherte User-ID verwendet. Mit der Funktion `getBookingsByUser()` werden die passenden Buchungen aus MongoDB abgerufen und mit den dazugehörigen Angebots-, Trainer- und Standortdaten ergänzt.
-
-Zusätzlich können Termine storniert werden. Dafür wird eine serverseitige `action` verwendet. Die Buchung wird anhand der `bookingId` und der `userId` identifiziert und mit `deleteBooking()` aus der Datenbank gelöscht. Vor dem Löschen erscheint im Frontend eine Bestätigung, damit der Termin nicht versehentlich storniert wird.
+Die Seite „Meine Termine“ lädt alle Buchungen des aktiven Users. Zusätzlich können Termine storniert oder verschoben werden.
 
 **Deployment:**
 
-https://prooboscoachingapp1.netlify.app/
+https://proodoscoaching.netlify.app/
 
 **Besondere Entscheidungen:**
 
-- Die App verwendet im Prototyp kein echtes Login, sondern speichert die User-ID nach der Profilerstellung in einem Cookie.
-- Buchungen werden im Mindestumfang direkt bestätigt. Ein Trainer-Bestätigungsprozess ist als Erweiterung vorgesehen.
+- Die App verwendet im Prototyp kein echtes Login, sondern ein vereinfachtes Dummy-Login.
+- Buchungen werden direkt bestätigt.
 - Bereits gebuchte Termine werden bei der Buchung nicht mehr als auswählbare Option angezeigt.
 - Eine vollständige Kalenderansicht wurde zugunsten einer einfacheren Datum- und Uhrzeitauswahl nicht umgesetzt.
-- Die Kartenansicht und freie Standortsuche sind als Erweiterungen vorgesehen.
+- Bilder werden nicht in MongoDB gespeichert, sondern über Helper-Funktionen anhand der Sportart bzw. des Trainerprofils geladen.
 
 ### 3.5 Validate
 
@@ -559,59 +563,82 @@ https://prooboscoachingapp1.netlify.app/
 
 ## 4. Erweiterungen [Optional]
 
-### 4.1 Kartenansicht und Standortsuche mit externer API
+### 4.1 Wiederholungsbuchung
 
-- **Beschreibung & Nutzen:** Als Erweiterung könnte eine Karten-API wie Google Maps, Mapbox oder OpenStreetMap integriert werden. Dadurch könnten Nutzer Trainingsangebote auf einer Karte sehen und nach Standorten in ihrer Nähe suchen. Zusätzlich könnten freie Wunschstandorte vorgeschlagen werden, z. B. ein Tennisplatz, Sportplatz oder Fitnessstudio in der Umgebung.
-- **Wo umgesetzt:** Noch nicht umgesetzt. Die Datenstruktur ist mit Standortdaten und Koordinaten vorbereitet.
-- **Referenz:** Mockup und Datenstruktur.
-- **Aus Evaluation abgeleitet?:** Nein, als geplante Erweiterung vorgesehen.
+- **Beschreibung & Nutzen:** User können bei der Buchung eine Wiederholungsanfrage erstellen. Dadurch können mehrere Trainings über mehrere Wochen geplant werden. Das ist sinnvoll für User, die regelmässig mit einem Trainer trainieren möchten.
+- **Wo umgesetzt:**
+  - **Frontend:** Buchungsseite und Terminübersicht
+  - **Backend:** `my-app/src/routes/booking/[offerId]/+page.server.js`
+  - **Datenbank:** Collection `bookings` mit Wiederholungsinformationen
+- **Referenz:** Buchungsseite und „Meine Termine“
+- **Aus Evaluation abgeleitet?:** Nein, als sinnvolle Erweiterung für den Buchungsprozess umgesetzt.
 
-### 4.2 Trainerbereich
+### 4.2 Wunschstandort bei der Buchung
 
-- **Beschreibung & Nutzen:** Trainer könnten eigene Angebote erstellen, Preise definieren und verfügbare Termine verwalten. Dadurch würde die Plattform auch für Trainer vollständig nutzbar.
-- **Wo umgesetzt:** Noch nicht umgesetzt.
-- **Referenz:** Use-Case-Diagramm und Erweiterungsidee.
-- **Aus Evaluation abgeleitet?:** Nein, als Erweiterung vorgesehen.
+- **Beschreibung & Nutzen:** User können bei einer Buchung einen eigenen Wunschstandort angeben. Dadurch kann ein Training auch an einem alternativen Ort stattfinden, z. B. auf einem bestimmten Sportplatz oder in einer Anlage in der Nähe.
+- **Wo umgesetzt:**
+  - **Frontend:** Buchungsformular mit Auswahl zwischen Standardstandort und Wunschstandort
+  - **Backend:** Verarbeitung in der Buchungs-Action
+  - **Datenbank:** Feld `requestedLocation` in der Collection `bookings`
+- **Referenz:** Buchungsseite und Terminübersicht
+- **Aus Evaluation abgeleitet?:** Nein, als funktionale Erweiterung umgesetzt.
 
-### 4.3 Trainerbestätigung von Buchungen
+### 4.3 Kartenansicht mit Trainingsstandorten
 
-- **Beschreibung & Nutzen:** Im Prototyp werden Buchungen direkt bestätigt. Als Erweiterung könnten Trainer Buchungsanfragen bestätigen oder ablehnen. Dadurch würde der Prozess realistischer.
-- **Wo umgesetzt:** Noch nicht umgesetzt.
-- **Referenz:** End-to-End-Ablauf.
-- **Aus Evaluation abgeleitet?:** Nein, als Erweiterung vorgesehen.
+- **Beschreibung & Nutzen:** Trainingsangebote werden auf einer interaktiven Karte angezeigt. Dadurch können User besser einschätzen, welche Angebote in ihrer Region liegen. Beim Klick auf einen Marker wird das passende Angebot angezeigt.
+- **Wo umgesetzt:**
+  - **Frontend:** `my-app/src/routes/map/+page.svelte`
+  - **Komponente:** `my-app/src/lib/components/map/LeafletMap.svelte`
+  - **Backend:** `my-app/src/routes/map/+page.server.js`
+  - **Datenbank:** Standortdaten mit Koordinaten in `trainingLocations`
+- **Referenz:** Kartenansicht im Prototyp
+- **Aus Evaluation abgeleitet?:** Nein, als Erweiterung für bessere Standortorientierung umgesetzt.
 
-### 4.4 Favoritenfunktion
+### 4.4 Benachrichtigungen
 
-- **Beschreibung & Nutzen:** User könnten Angebote speichern und später wiederfinden. Dadurch könnten sie mehrere Angebote vergleichen, bevor sie eine Buchung abschliessen.
-- **Wo umgesetzt:** Noch nicht umgesetzt.
-- **Referenz:** Mockup und UX-Konzept.
-- **Aus Evaluation abgeleitet?:** Nein, als Erweiterung vorgesehen.
+- **Beschreibung & Nutzen:** User erhalten Benachrichtigungen zu Buchungen, Verschiebungen und Stornierungen. Dadurch sind wichtige Änderungen zentral sichtbar. Benachrichtigungen enthalten Titel, Nachricht, Datum, Angebot und Buchungsnummer.
+- **Wo umgesetzt:**
+  - **Frontend:** `my-app/src/routes/notifications/+page.svelte`
+  - **Backend:** Server Actions bei Buchung, Verschiebung und Stornierung
+  - **Datenbank:** Collection `notifications`
+- **Referenz:** Benachrichtigungsseite und Navbar-Anzeige
+- **Aus Evaluation abgeleitet?:** Nein, als Ergänzung zur Terminverwaltung umgesetzt.
 
-### 4.5 Bewertungen schreiben
+### 4.5 Favoritenfunktion
 
-- **Beschreibung & Nutzen:** Nach einem absolvierten Training könnten User eine Bewertung abgeben. Dadurch würde die Transparenz und Vertrauenswürdigkeit der Plattform erhöht.
-- **Wo umgesetzt:** Noch nicht umgesetzt. Die Collection `reviews` ist in den Mockdaten vorbereitet.
-- **Referenz:** Mockdaten und Detailansicht.
-- **Aus Evaluation abgeleitet?:** Nein, als Erweiterung vorgesehen.
+- **Beschreibung & Nutzen:** User können Angebote speichern und später wiederfinden. Dadurch können mehrere Angebote verglichen werden, bevor eine Buchung abgeschlossen wird.
+- **Wo umgesetzt:**
+  - **Frontend:** Favoriten-Button in Angebotskarten und Kartenansicht
+  - **Backend:** Toggle-Funktion über Server Actions
+  - **Datenbank:** Collection `favorites`
+- **Referenz:** Angebotsübersicht und Kartenansicht
+- **Aus Evaluation abgeleitet?:** Nein, als zusätzliche Komfortfunktion umgesetzt.
+
+### 4.6 Erweiterte Suche und Filter
+
+- **Beschreibung & Nutzen:** Die Suche unterstützt Filter nach Sportart, Kanton, Gemeinde, Niveau, Datum, Preis und Bewertung. Dadurch können User Angebote gezielter finden.
+- **Wo umgesetzt:**
+  - **Frontend:** SearchBar-Komponente
+  - **Datenbasis:** Geladene Trainingsangebote aus MongoDB
+- **Referenz:** Angebotsseite und Kartenansicht
+- **Aus Evaluation abgeleitet?:** Nein, als Verbesserung der Auffindbarkeit umgesetzt.
 
 ## 5. Projektorganisation [Optional]
 
 **Repository & Struktur:**
-
 
 Die Anwendung ist als SvelteKit-Projekt aufgebaut. Die wichtigsten Ordner sind:
 
 - `src/routes`: Seiten und serverseitige Logik
 - `src/lib/components`: Wiederverwendbare Komponenten
 - `src/lib/db.js`: Datenbankschnittstelle
-- `static`: Statische Assets wie Platzhalterbilder
+- `src/lib/data`: Stammdaten wie Sportarten und Standorte
+- `src/lib/utils`: Hilfsfunktionen wie Bildzuordnung
+- `static`: Statische Assets wie Bilder, Piktogramme und Platzhalter
 - `json_mockdata`: Mockdaten für MongoDB
 
-
-- **Issue-Management:** _[Vorgehen kurz beschreiben]_
-- **Commit-Praxis:** _[z. B. sprechende Commits]_
-
-
+- **Issue-Management:** Die Umsetzung erfolgte schrittweise nach Funktionen. Zuerst wurden Profil, Angebote und Buchung umgesetzt. Danach folgten Erweiterungen wie Karte, Wiederholungsbuchung, Wunschstandort und Notifications.
+- **Commit-Praxis:** Änderungen wurden thematisch in Git festgehalten, z. B. für Mockdaten, Buchung, Karte, Notifications und UI-Anpassungen.
 
 ## 6. KI-Deklaration
 
@@ -619,21 +646,53 @@ Die folgende Deklaration ist verpflichtend und beschreibt den Einsatz von KI im 
 
 ### 6.1 KI-Tools
 
-- **Eingesetzte Tools**: _[z. B. Copilot, ChatGPT, Claude, lokale Modelle; Version/Variante wenn bekannt]_
-- **Zweck & Umfang**: _[wie, wofür und in welchem Ausmass wurde KI eingesetzt (z. B. Textentwürfe, Codevorschläge, Tests, Refactoring); welche Teile stammen (ganz/teilweise) aus KI-Unterstützung?]_
-- **Eigene Leistung (Abgrenzung):** _[was ist eigenständig erarbeitet/überarbeitet worden?]_
+- **Eingesetzte Tools:** ChatGPT wurde zur Unterstützung bei Konzeption, Programmierung, Fehlersuche, Refactoring, Mockdaten und Dokumentation eingesetzt.
+- **Zweck & Umfang:** 
+Bearbeitung mit KI: 
+- Karten Logik
+- Login Logik
+- Booking Logik
+- Datenbankmethoden (db.js)
+- Benachrichtigungen
+- Such und Filter Funktion
+- Terminauswahl Logik (inkl. Verschiebung, Stornierung)
+- Load-Funktionen asynchrone Funktionen im Backend bei Routen.
+
+Zudem wurde KI für die Strukturierung und sprachliche Überarbeitung der Dokumentation sowie für Mockdaten und Bild-/Asset-Planung verwendet. Die Erweiterung im UI mit CSS im ganzen Prototyp wurde mit KI gemacht.
+
+- **Eigene Leistung (Abgrenzung):** 
+- Die Grundidee (Business Case und USP)
+- Use Cases 
+- die Datenstruktur 
+- die Funktionsauswahl
+- Routing-Pages
+- das Layout
+- Angebote Anzeigung (inkl. CSS)
+- Detailansicht Angebote
+- Infoseite
+- Profilansicht
+- Registierungsformular
+- Meine Termine Page
+- Sportkategorien
+
+KI wurde als Unterstützung genutzt, um bestehende Ansätze zu verbessern und zu erweitern, Fehler zu analysieren und komplexere Logik effizienter umzusetzen.
 
 ### 6.2 Prompt-Vorgehen
 
-_[Überlegungen zu Prompt-Vorgehen, Qualität und Urheberrecht/Quellen. Wie wurde beim Prompting vorgegangen? Zu beschreiben ist die grundlegende Vorgehensweise. Einzelne, konkrete Prompts sollten höchstens als Beispiele aufgeführt werden. ]_
+Die Prompts wurden meistens anhand konkreter Probleme formuliert. Dazu wurden Codeausschnitte, Fehlermeldungen oder konkrete Anforderungen angegeben. Die KI-Antworten wurden geprüft, angepasst und schrittweise in den bestehenden Code integriert. Besonders bei technischen Problemen wurde iterativ gearbeitet: Fehler testen, Fehlermeldung analysieren, Lösungsvorschlag prüfen und anschliessend im Prototyp anpassen.
 
 ### 6.3 Reflexion
 
-_[Nutzen, Grenzen, Risiken/Qualitätssicherung, ...]_
+Die Nutzung der Proobos App dient hauptsächlich in einem Prototyp zu demonstrieren, wie eine Vermittlungswebseite von Sporttrainer aussieht und funktioniert. Wie die einzelnen Problemfälle gelöst werden mit dieser App. Einerseits sehen Kunden Angebote in Ihrer Gemeinde Region, für die Sie sich interessieren und können direkt einsehen, wenn Termine gebucht werden können. Auch sehen Kunden Bewertungen, die Ihnen helfen ihre Entscheidung zu treffen. Die App gibt Kunden die Flexibilität Sportangebote, für die Sie sich interessieren, in wenigen Klicks zu buchen. 
+
+Die Version 1.0 hat schon einige Features, die direkt übernommen werden können und nicht mehr erweitert werden müssen. Diese Funktionen sind die Kartenfunktion, Terminauswahl, Buchung eines Termines, Verwalten von Terminen in «Meine Termine». Das Profil kann auch nach der Registrierung angepasst werden und bleibt somit dynamisch. 
+
+Es ist aber zu bedenken, dass die App ein Frontend für das Profil eines Trainers braucht. Dies existiert noch nicht. Dies ist eine Erweiterung, die z.b nach einer erfolgreichen Testphase der Kundenansicht mit den «Mock Daten» gemacht wird. Auch gibt es noch keine Schnittstelle eines Zahlungsterminals und eines E-Mail-Servers, der automatische Bestätigungsnachrichten an Kunden sendet. Auch ein Admin-Frontend, das alle Ereignisse über alle Akteure hinwegsehen kann, wurde in diesem Prototyp auch nicht entwickelt. 
+
+Bezüglich zum Datenschutz ist Folgendes zu bedenken. Im Prototyp der Proobos App werden Test-User angewiesen unbedingt keine realen Daten einzugeben, denn die Logindaten werden nicht sicherheitskonform gespeichert. Es gibt keine «SHA Hashing» der Passwörter im Backend der MongoDB. Dies ist ebenfalls eine Erweiterung, die gemacht werden müsste nach einem erfolgreichen «Acceptability Test» der Stakeholder und Test-User.
+
 
 ## 7. Anhang [Optional]
-
-Beispiele:
 
 **Quellen:**
 
@@ -643,4 +702,3 @@ Beispiele:
 
 - **Testskript & Materialien:** _[Link/Datei]_
 - **Rohdaten/Auswertung:** _[Link/Datei]_
-

@@ -249,32 +249,6 @@ async function createBooking(booking) {
   return null;
 }
 
-async function createBookingNumber() {
-  const year = new Date().getFullYear();
-  const prefix = `BKG-${year}-`;
-
-  const bookingsCollection = db.collection("bookings");
-
-  const lastBooking = await bookingsCollection
-    .find({
-      bookingNumber: { $regex: `^${prefix}` },
-    })
-    .sort({
-      bookingNumber: -1,
-    })
-    .limit(1)
-    .toArray();
-
-  let nextNumber = 1;
-
-  if (lastBooking.length > 0) {
-    const lastNumber = lastBooking[0].bookingNumber.split("-")[2];
-    nextNumber = Number(lastNumber) + 1;
-  }
-
-  return prefix + String(nextNumber).padStart(4, "0");
-}
-
 // Get booking by id including offer, trainer and location
 async function getBooking(id) {
   let booking = null;
@@ -801,50 +775,6 @@ async function getUserByLogin(username, password) {
   }
 
   return null;
-}
-
-async function createNotification(notification) {
-  try {
-    const collection = db.collection("notifications");
-
-    const newNotification = {
-      userId: notification.userId,
-      sender: notification.sender || "System",
-      title: notification.title,
-      message: notification.message,
-      type: notification.type || "system",
-      bookingId: notification.bookingId || null,
-      offerId: notification.offerId || null,
-      isRead: false,
-      createdAt: new Date().toISOString(),
-    };
-
-    await collection.insertOne(newNotification);
-
-    return true;
-  } catch (error) {
-    console.log(error.message);
-  }
-
-  return false;
-}
-
-async function getNotificationsByUser(userId) {
-  try {
-    const notifications = await db
-      .collection("notifications")
-      .find({ userId: userId })
-      .sort({ createdAt: -1 })
-      .toArray();
-
-    notifications.forEach(convertId);
-
-    return notifications;
-  } catch (error) {
-    console.log(error.message);
-  }
-
-  return [];
 }
 
 async function createNotification(notification) {

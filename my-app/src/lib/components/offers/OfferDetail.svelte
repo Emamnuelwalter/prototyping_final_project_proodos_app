@@ -11,40 +11,75 @@
   $effect(() => {
     isFavorite = offer?.isFavorite === true;
   });
+
+  function googleMapsRouteUrl(offer) {
+    const location = offer.location;
+
+    if (!location) {
+      return "#";
+    }
+
+    if (location.coordinates?.lat && location.coordinates?.lng) {
+      return `https://www.google.com/maps/dir/?api=1&destination=${location.coordinates.lat},${location.coordinates.lng}`;
+    }
+
+    const address = [
+      location.name,
+      location.address?.street,
+      location.address?.postalCode,
+      location.address?.municipality,
+      location.address?.canton,
+      "Switzerland",
+    ]
+      .filter(Boolean)
+      .join(", ");
+
+    return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(address)}`;
+  }
 </script>
 
 <div class="offer-detail">
-  <img
-    src={getOfferImage(offer.sport)}
-    alt={offer.sport}
-    class="detail-img"
-  />
+  <img src={getOfferImage(offer.sport)} alt={offer.sport} class="detail-img" />
 
   <div class="d-flex justify-content-between align-items-start gap-3 mt-4">
     <h1 class="mb-0">{offer.title}</h1>
-    <form
-      method="POST"
-      action="?/toggleFavorite"
-      use:enhance={() => {
-        return async ({ result }) => {
-          if (result.type === "success" && result.data?.success) {
-            isFavorite = result.data.isFavorite;
-            await invalidateAll();
-          }
-        };
-      }}
-    >
-      <input type="hidden" name="offerId" value={offer._id} />
 
-      <button
-        class:liked-heart={isFavorite}
-        class="detail-heart-button"
-        type="submit"
-        aria-label="Favorit"
+    <div class="detail-actions">
+      <a
+        class="detail-route-button"
+        href={googleMapsRouteUrl(offer)}
+        target="_blank"
+        rel="noreferrer"
+        aria-label="Route öffnen"
+        title="Route öffnen"
       >
-        {isFavorite ? "♥" : "♡"}
-      </button>
-    </form>
+        🧭
+      </a>
+
+      <form
+        method="POST"
+        action="?/toggleFavorite"
+        use:enhance={() => {
+          return async ({ result }) => {
+            if (result.type === "success" && result.data?.success) {
+              isFavorite = result.data.isFavorite;
+              await invalidateAll();
+            }
+          };
+        }}
+      >
+        <input type="hidden" name="offerId" value={offer._id} />
+
+        <button
+          class:liked-heart={isFavorite}
+          class="detail-heart-button"
+          type="submit"
+          aria-label="Favorit"
+        >
+          {isFavorite ? "♥" : "♡"}
+        </button>
+      </form>
+    </div>
   </div>
 
   <div>
@@ -94,6 +129,37 @@
   .price {
     font-weight: 600;
     font-size: 18px;
+  }
+
+  .detail-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  .detail-actions form {
+    margin: 0;
+  }
+
+  .detail-route-button {
+    border: none;
+    border-radius: 10px;
+    background-color: #555;
+    color: white;
+    font-size: 20px;
+    width: 48px;
+    height: 44px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+  }
+
+  .detail-route-button:hover {
+    background-color: #333;
+    color: white;
   }
 
   .detail-heart-button {

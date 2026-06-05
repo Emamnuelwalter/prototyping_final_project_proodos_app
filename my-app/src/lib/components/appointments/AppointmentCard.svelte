@@ -1,7 +1,8 @@
 <script>
   import AppointmentStatusBadge from "$lib/components/appointments/AppointmentStatusBadge.svelte";
+  import { getOfferImage } from "$lib/utils/images.js";
 
-  let { booking } = $props();
+  let { booking, offer } = $props();
 
   let showDetails = $state(false);
 
@@ -36,7 +37,11 @@
 </script>
 
 <div class="card appointment-card">
-  <img src="/img/offers_placeholder.png" class="card-img-top" alt="Training" />
+  <img
+    src={getOfferImage(booking.offer?.sport || offer?.sport)}
+    alt={booking.offer?.sport || offer?.sport || "Training"}
+    class="card-img-top"
+  />
 
   <div class="card-body">
     <div class="mb-2 d-flex gap-2 flex-wrap">
@@ -67,9 +72,9 @@
       </p>
 
       <p class="mb-1 text-muted">
-        {formatDateCH(booking.repeatBookings[0].date)} bis {formatDateCH(booking.repeatBookings[
-          booking.repeatBookings.length - 1
-        ].date)}
+        {formatDateCH(booking.repeatBookings[0].date)} bis {formatDateCH(
+          booking.repeatBookings[booking.repeatBookings.length - 1].date,
+        )}
       </p>
     {:else}
       <p class="mb-1">
@@ -138,7 +143,8 @@
           <ul class="mb-3">
             {#each booking.repeatBookings as repeatBooking}
               <li>
-                {formatDateCH(repeatBooking.date)} · {repeatBooking.startTime} - {repeatBooking.endTime}
+                {formatDateCH(repeatBooking.date)} · {repeatBooking.startTime} -
+                {repeatBooking.endTime}
               </li>
             {/each}
           </ul>

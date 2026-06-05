@@ -90,12 +90,7 @@
               class="rounded-circle"
             />
           </div>
-
-          <div class="mt-2">
-            <button class="btn btn-primary btn-sm" type="button">
-              Profilbild ändern
-            </button>
-          </div>
+          <h3 class="mt-2 mb-1">@{formUser.username}</h3>
         </div>
 
         {#if form?.message}
@@ -103,7 +98,6 @@
             {form.message}
           </div>
         {/if}
-
         <div class="col-md-6 mb-3">
           <label for="gender" class="form-label">Geschlecht</label>
 
@@ -128,6 +122,18 @@
               readonly
             />
           {/if}
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label for="username" class="form-label">Username</label>
+          <input
+            id="username"
+            name="username"
+            class="form-control"
+            bind:value={formUser.username}
+            readonly={!editMode}
+            required
+          />
         </div>
 
         <div class="row">
@@ -352,7 +358,6 @@
                 event.preventDefault();
               }
             }}
-            
           >
             Ausloggen
           </button>
