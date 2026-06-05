@@ -34,6 +34,17 @@
       year: "numeric",
     });
   }
+
+  let today = new Date().toISOString().split("T")[0];
+
+  function getFutureFreeTimes(freeTimes = []) {
+    return freeTimes
+      .filter((time) => time.date >= today)
+      .sort((a, b) => {
+        return (a.date + a.startTime).localeCompare(b.date + b.startTime);
+      })
+      .slice(0, 5);
+  }
 </script>
 
 <div class="card appointment-card">
@@ -122,12 +133,7 @@
               {booking.requestedLocation.note}
             </p>
           {/if}
-        {:else}
-          <p class="mb-3">
-            <strong>Standort:</strong>
-            {booking.location?.name}
-          </p>
-        {/if}
+        {:else}{/if}
 
         {#if isRepeatedBooking}
           <p class="mb-3 text-muted">
@@ -183,14 +189,22 @@
               </button>
             </form>
           {:else}
-            {#if booking.freeTimes?.length > 0}
+            {#if getFutureFreeTimes(booking.freeTimes).length > 0}
               <form method="POST" action="?/reschedule" class="mt-2">
                 <input type="hidden" name="bookingId" value={booking._id} />
 
-                <select class="form-select mb-2" name="selectedSlot" required>
-                  <option value="">Neuen Termin auswählen</option>
+                <label class="mt-2 mb-2" for="selectedSlot">
+                  Neuen Termin:</label
+                >
+                <select
+                  class="form-select mb-2"
+                  name="selectedSlot"
+                  id="selectedSlot"
+                  required
+                >
+                  <option class="mb-3" value="">Neuen Termin auswählen</option>
 
-                  {#each booking.freeTimes as time}
+                  {#each getFutureFreeTimes(booking.freeTimes) as time}
                     <option
                       value={`${time.date}_${time.startTime}_${time.endTime}`}
                     >
@@ -275,7 +289,7 @@
                       </button>
                     </form>
                   {:else}
-                    {#if repeatBooking.freeTimes?.length > 0}
+                    {#if getFutureFreeTimes(repeatBooking.freeTimes).length > 0}
                       <form method="POST" action="?/reschedule" class="mb-2">
                         <input
                           type="hidden"
@@ -290,7 +304,7 @@
                         >
                           <option value="">Neuer Termin</option>
 
-                          {#each repeatBooking.freeTimes as time}
+                          {#each getFutureFreeTimes(repeatBooking.freeTimes) as time}
                             <option
                               value={`${time.date}_${time.startTime}_${time.endTime}`}
                             >

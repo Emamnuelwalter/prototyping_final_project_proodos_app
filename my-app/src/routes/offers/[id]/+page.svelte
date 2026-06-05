@@ -28,8 +28,8 @@
           <ReviewList
             reviews={data.reviews}
             {form}
-            isAdmin={data.isAdmin}
             canReview={data.canReview}
+            currentUserId={data.currentUserId}
           />
         </div>
       </div>

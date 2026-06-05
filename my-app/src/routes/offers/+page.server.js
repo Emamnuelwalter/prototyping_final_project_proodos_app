@@ -28,9 +28,30 @@ export async function load({ cookies, url }) {
   const user = userId ? await db.getUser(userId) : null;
   const offers = await db.getOffers();
 
+  const offersWithRatings = await Promise.all(
+    offers.map(async (offer) => {
+      const reviews = await db.getReviewsByOffer(offer._id);
+
+      const reviewCount = reviews.length;
+
+      const ratingAvg =
+        reviewCount > 0
+          ? reviews.reduce((sum, review) => {
+              return sum + Number(review.rating);
+            }, 0) / reviewCount
+          : 0;
+
+      return {
+        ...offer,
+        ratingAvg: Number(ratingAvg.toFixed(1)),
+        reviewCount,
+      };
+    }),
+  );
+
   const favoriteOfferIds = userId ? await db.getFavoriteOfferIds(userId) : [];
 
-  const offersWithFavorites = offers.map((offer) => {
+  const offersWithFavorites = offersWithRatings.map((offer) => {
     return {
       ...offer,
       isFavorite: favoriteOfferIds.includes(offer._id),
@@ -69,6 +90,7 @@ export async function load({ cookies, url }) {
   } else {
     recommendedOffers = offersWithFavorites;
   }
+
   return {
     user,
     offers: sortedOffers,

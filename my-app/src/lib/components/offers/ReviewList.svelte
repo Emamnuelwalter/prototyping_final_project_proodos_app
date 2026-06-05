@@ -1,5 +1,10 @@
 <script>
-  let { reviews = [], form, isAdmin = false, canReview = false } = $props();
+  let {
+    reviews = [],
+    form,
+    canReview = false,
+    currentUserId = null,
+  } = $props();
 </script>
 
 <div class="card mb-4">
@@ -10,14 +15,16 @@
       <div class="card-body">
         <h4 class="mb-3">Bewertung schreiben</h4>
 
-        {#if form?.error}
-          <div class="alert alert-danger">
-            {form.error}
+        {#if form?.success}
+          <div class="alert alert-success">
+            {form.message}
           </div>
         {/if}
 
-        {#if form?.success}
-          <div class="alert alert-success">Bewertung wurde gespeichert.</div>
+        {#if form?.error}
+          <div class="alert alert-danger">
+            {form.message}
+          </div>
         {/if}
 
         {#if canReview}
@@ -74,11 +81,11 @@
                 </p>
 
                 <small class="text-muted">
-                  {new Date(review.createdAt).toLocaleDateString("de-CH")}
+                  {new Date(review.createdAt).toLocaleDateString("de-CH")} von {review.username}
                 </small>
               </div>
 
-              {#if isAdmin}
+              {#if review.customerId === currentUserId}
                 <form method="POST" action="?/deleteReview">
                   <input type="hidden" name="reviewId" value={review.id} />
 

@@ -3,7 +3,12 @@
   import { invalidateAll } from "$app/navigation";
   import { getOfferImage, getSportPictogram } from "$lib/utils/images.js";
 
-  let { offer, removeOnUnfavorite = false, onUnfavorite = null } = $props();
+  let {
+    offer,
+    removeOnUnfavorite = false,
+    onUnfavorite = null,
+    reviews = [],
+  } = $props();
 
   let isFavorite = $state(false);
   let isVisible = $state(true);
@@ -73,6 +78,9 @@
       <a href={"/offers/" + offer._id} class="offer-link">
         <div class="offer-info">
           <h5>{offer.title}</h5>
+          <p class="mb-2">
+            ⭐ {offer.ratingAvg} / 5 Bewertung
+          </p>
           <p class="price">{offer.pricePerHour} {offer.currency}/h</p>
           <p>{trainerName}</p>
           <p>{offer.levels?.join(", ")}</p>

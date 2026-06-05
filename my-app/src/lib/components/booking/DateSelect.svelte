@@ -28,7 +28,10 @@
     return freeTimes.filter((time) => time.date === date).length;
   }
 
-  let nextAvailableDates = $derived(dates.slice(0, 3));
+  let today = new Date().toISOString().split("T")[0];
+  let nextAvailableDates = $derived(
+    dates.filter((date) => date >= today).slice(0, 3),
+  );
 </script>
 
 <div>
@@ -39,11 +42,10 @@
     type="date"
     class="form-control"
     bind:value={selectedDate}
+    min={today}
   />
 
   {#if selectedDate}
-    
-
     {#if countSlotsForDate(selectedDate) > 0}
       <p class="text-success mb-0">
         {countSlotsForDate(selectedDate)} freie Slots an diesem Tag verfügbar.

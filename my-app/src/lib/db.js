@@ -513,18 +513,37 @@ async function createReview(review) {
   await updateOfferRating(review.offerId);
 }
 
-async function deleteReview(reviewId) {
+async function deleteReview(reviewId, userId) {
   const collection = db.collection("reviews");
 
-  const review = await collection.findOne({ id: reviewId });
+  const review = await collection.findOne({
+    id: reviewId,
+    customerId: userId,
+  });
 
   if (!review) {
-    return;
+    return false;
   }
 
-  await collection.deleteOne({ id: reviewId });
+  await collection.deleteOne({
+    id: reviewId,
+    customerId: userId,
+  });
 
   await updateOfferRating(review.offerId);
+
+  return true;
+}
+
+async function deleteReviewByUser(reviewId, userId) {
+  const collection = db.collection("reviews");
+
+  const result = await collection.deleteOne({
+    id: reviewId,
+    customerId: userId,
+  });
+
+  return result.deletedCount === 1;
 }
 
 async function getFreeTimesByOffer(offerId, currentBookingId) {
@@ -909,7 +928,6 @@ export default {
   updateUser,
   getFreeTimesByOffer,
   rescheduleBooking,
-  getReviewsByOffer,
   updateOfferRating,
 
   deleteReview,
@@ -944,4 +962,5 @@ export default {
   getNotificationsByUser,
   getUnreadNotificationCount,
   markNotificationsAsRead,
+  deleteReviewByUser,
 };
