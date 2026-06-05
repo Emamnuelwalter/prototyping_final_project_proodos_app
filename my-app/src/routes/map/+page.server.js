@@ -18,18 +18,17 @@ function sortByUserSports(offers, user) {
 export async function load({ cookies }) {
   const userId = cookies.get("userId");
 
-  const offers = await db.getOffers();
-  const user = userId ? await db.getUser(userId) : null;
-
-  let favoriteOfferIds = [];
-
-  if (userId) {
-    favoriteOfferIds = await db.getFavoriteOfferIds(userId);
-  }
+  const [offers, user, favoriteOfferIds] = await Promise.all([
+    db.getOffers(),
+    userId ? db.getUser(userId) : null,
+    userId ? db.getFavoriteOfferIds(userId) : [],
+  ]);
 
   const offersWithFavorites = offers.map((offer) => {
     return {
       ...offer,
+      ratingAvg: offer.ratingAvg || 0,
+      reviewCount: offer.reviewCount || 0,
       isFavorite: favoriteOfferIds.includes(offer._id),
     };
   });
