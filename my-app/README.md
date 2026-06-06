@@ -613,16 +613,16 @@ Die Evaluation wurde als moderierter Usability-Test vor Ort durchgeführt. Die T
 #### Aufgaben / Szenarien
 
 **Ausgangslage:**  
-Die Testperson ist Student und Freizeitsportler und möchte im Krafttraining Fortschritte machen. Dafür sucht sie über Proodos einen passenden Trainer und möchte flexibel einen Termin buchen.
+Sie sind ein Student und Freizeitsportler, der im Krafttraining Fortschritte machen möchte. Sie daran interessiert einen Trainer zu finden, der Ihnen helfen soll dieses Ziel zu erreichen. Da Sie jedoch nicht viel Zeit haben, ist es für Sie schwierig, sich an feste Termine zu halten. Sie setzten daher eher auf Flexibilität.  Ebenfalls haben Sie auch Mühe den passenden Trainer zu finden, da Sie im Internet auch keine authentischen wirkenden Bewertungen über Trainer finden. Ihr Freund erzählt ihnen von der App «Proodos», eine Vermittlungsplattform für Sporttrainer. Sie probieren diese aus. 
 
 **Aufgabe 1:**  
-Ein Profil erstellen, damit passende Sportangebote angezeigt werden.
+Sie möchten ein Profil erstellen, damit Ihnen Sportangebote in ihrer Nähe angezeigt werden.
 
 **Aufgabe 2:**  
-Ein passendes Trainingsangebot suchen und die Detailansicht prüfen.
+Sie möchten das passende Angebot für Ihre gewünschte Sportauswahl wählen. Suchen Sie das Angebot, das Ihnen gefällt und lesen Sie sich kurz in der Detailansicht durch.
 
 **Aufgabe 3:**  
-Einen Termin buchen und diesen anschliessend unter „Meine Termine“ verwalten.
+Nachdem Sie sich über das Angebot informiert haben. Wählen Sie einen passenden Termin und buchen Sie die Trainingsstunde. Verwalten Sie ihren Termin unter «Meine Termine». Sie können den Termin verschieben, stornieren oder einfach bestehen lassen.
 
 #### Kennzahlen & Beobachtungen
 
