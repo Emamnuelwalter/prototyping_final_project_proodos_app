@@ -826,6 +826,7 @@ Die folgende Deklaration ist verpflichtend und beschreibt den Einsatz von KI im 
 - Such und Filter Funktion
 - Terminauswahl Logik (inkl. Verschiebung, Stornierung)
 - Load-Funktionen asynchrone Funktionen im Backend bei Routen.
+- Mockdaten erstellung und Bildergenerierung
 
 Zudem wurde KI für die Strukturierung und sprachliche Überarbeitung der Dokumentation sowie für Mockdaten und Bild-/Asset-Planung verwendet. Die Erweiterung im UI mit CSS im ganzen Prototyp wurde mit KI gemacht. Zudem wurde KI als Unterstützung genutzt, um bestehende Ansätze zu verbessern und zu erweitern, Fehler zu analysieren und komplexere Logik effizienter umzusetzen.
 
