@@ -826,7 +826,8 @@ Die folgende Deklaration ist verpflichtend und beschreibt den Einsatz von KI im 
 - Such und Filter Funktion
 - Terminauswahl Logik (inkl. Verschiebung, Stornierung)
 - Load-Funktionen asynchrone Funktionen im Backend bei Routen.
-- Mockdaten erstellung und Bildergenerierung
+- Erstellung und Anpassung von fiktiven Mockdaten
+- Erstellung von KI-generierten Platzhalterbildern für Trainingsangebote und Trainerprofile. Die Bilder dienen nur der visuellen Darstellung im Prototyp und zeigen keine realen Personen.
 
 Zudem wurde KI für die Strukturierung und sprachliche Überarbeitung der Dokumentation sowie für Mockdaten und Bild-/Asset-Planung verwendet. Die Erweiterung im UI mit CSS im ganzen Prototyp wurde mit KI gemacht. Zudem wurde KI als Unterstützung genutzt, um bestehende Ansätze zu verbessern und zu erweitern, Fehler zu analysieren und komplexere Logik effizienter umzusetzen.
 
@@ -850,6 +851,12 @@ Zudem wurde KI für die Strukturierung und sprachliche Überarbeitung der Dokume
 Die Prompts wurden meistens anhand konkreter Probleme formuliert. Dazu wurden Codeausschnitte, Fehlermeldungen oder konkrete Anforderungen angegeben. Die KI-Antworten wurden geprüft, angepasst und schrittweise in den bestehenden Code integriert. Besonders bei technischen Problemen wurde iterativ gearbeitet: Fehler testen, Fehlermeldung analysieren, Lösungsvorschlag prüfen und anschliessend im Prototyp anpassen.
 
 ### 6.3 Reflexion
+
+Die KI-Unterstützung war vor allem bei der Fehlersuche, Strukturierung von Code, Dokumentation und Mockdaten hilfreich. Besonders bei komplexeren Funktionen wie Buchungslogik, Filterung, Karte und Benachrichtigungen konnten Lösungsvorschläge schneller geprüft werden.
+
+Gleichzeitig mussten die KI-Vorschläge immer kontrolliert und an den bestehenden Code angepasst werden. Nicht alle Vorschläge funktionierten direkt oder passten zur vorhandenen Projektstruktur. Deshalb wurden Codeänderungen getestet, angepasst und bei Bedarf vereinfacht.
+
+Ein Risiko bestand darin, dass KI-generierter Code unnötig komplex oder nicht vollständig passend sein kann. Deshalb wurden zentrale Funktionen wie Buchung, Profil, Termine, Reviews und Deployment manuell getestet. Auch die verwendeten Mockdaten und Bilder wurden als fiktive Inhalte deklariert.
 
 Die Nutzung der Proodos App dient hauptsächlich in einem Prototyp zu demonstrieren, wie eine Vermittlungswebseite von Sporttrainer aussieht und funktioniert. Wie die einzelnen Problemfälle gelöst werden mit dieser App. Einerseits sehen Kunden Angebote in Ihrer Gemeinde Region, für die Sie sich interessieren und können direkt einsehen, wenn Termine gebucht werden können. Auch sehen Kunden Bewertungen, die Ihnen helfen ihre Entscheidung zu treffen. Die App gibt Kunden die Flexibilität Sportangebote, für die Sie sich interessieren, in wenigen Klicks zu buchen.
 
