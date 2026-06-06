@@ -1,6 +1,9 @@
 <script>
   import { onMount } from "svelte";
   import "leaflet/dist/leaflet.css";
+  import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
+  import markerIcon from "leaflet/dist/images/marker-icon.png";
+  import markerShadow from "leaflet/dist/images/marker-shadow.png";
 
   let { offers = [], selectedOffer = null, onSelectOffer = null } = $props();
 
@@ -129,6 +132,14 @@
 
   onMount(async () => {
     L = await import("leaflet");
+
+    delete L.Icon.Default.prototype._getIconUrl;
+
+    L.Icon.Default.mergeOptions({
+      iconRetinaUrl: markerIcon2x,
+      iconUrl: markerIcon,
+      shadowUrl: markerShadow,
+    });
 
     map = L.map(mapElement).setView([47.3769, 8.5417], 12);
 
