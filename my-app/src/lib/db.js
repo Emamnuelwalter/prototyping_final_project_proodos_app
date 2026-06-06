@@ -105,20 +105,34 @@ async function getOffers(sport = null) {
 
     offers = await collection.find(query).toArray();
 
-    for (const offer of offers) {
-      convertId(offer);
+    offers = await Promise.all(
+      offers.map(async (offer) => {
+        convertId(offer);
 
-      const trainer = await db.collection("users").findOne({
-        _id: offer.trainerId,
-      });
+        const [trainer, location] = await Promise.all([
+          db.collection("users").findOne({
+            _id: offer.trainerId,
+          }),
 
-      const location = await db.collection("trainingLocations").findOne({
-        _id: offer.locationId,
-      });
+          db.collection("trainingLocations").findOne({
+            _id: offer.locationId,
+          }),
+        ]);
 
-      offer.trainer = trainer;
-      offer.location = location;
-    }
+        if (trainer) {
+          convertId(trainer);
+        }
+
+        if (location) {
+          convertId(location);
+        }
+
+        offer.trainer = trainer;
+        offer.location = location;
+
+        return offer;
+      }),
+    );
   } catch (error) {
     console.log(error.message);
   }

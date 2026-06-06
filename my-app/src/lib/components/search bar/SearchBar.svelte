@@ -35,6 +35,10 @@
     ).trim();
   }
 
+  function getRating(offer) {
+    return Number(offer.ratingAvg || 0);
+  }
+
   function uniqueValues(values) {
     return [...new Set(values.filter(Boolean))].sort();
   }
@@ -111,7 +115,7 @@
       return false;
     }
 
-    if (minRating && Number(offer.averageRating || 0) < Number(minRating)) {
+    if (minRating && getRating(offer) < Number(minRating)) {
       return false;
     }
 
@@ -373,8 +377,10 @@
                 · {offer.location?.address?.municipality},
                 {offer.location?.address?.canton}
                 · {offer.pricePerHour}
-                {offer.currency}/h · ⭐ {offer.averageRating ||
-                  "keine Bewertung"}
+                {offer.currency}/h · ⭐
+                {getRating(offer) > 0
+                  ? getRating(offer).toFixed(1)
+                  : "keine Bewertung"}
               </small>
             </a>
           {/each}

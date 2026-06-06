@@ -21,6 +21,29 @@ function getOfferScore(offer, user) {
   return score;
 }
 
+async function addRatingsToOffers(offers) {
+  return await Promise.all(
+    offers.map(async (offer) => {
+      const reviews = await db.getReviewsByOffer(offer._id);
+
+      const reviewCount = reviews.length;
+
+      const ratingAvg =
+        reviewCount > 0
+          ? reviews.reduce((sum, review) => {
+              return sum + Number(review.rating);
+            }, 0) / reviewCount
+          : 0;
+
+      return {
+        ...offer,
+        ratingAvg: Number(ratingAvg.toFixed(1)),
+        reviewCount,
+      };
+    }),
+  );
+}
+
 export async function load({ cookies, url }) {
   const userId = cookies.get("userId");
   const profileCreated = url.searchParams.get("profileCreated") === "true";
@@ -31,13 +54,8 @@ export async function load({ cookies, url }) {
     userId ? db.getFavoriteOfferIds(userId) : [],
   ]);
 
-  const offersWithRatings = offers.map((offer) => {
-    return {
-      ...offer,
-      ratingAvg: offer.ratingAvg || 0,
-      reviewCount: offer.reviewCount || 0,
-    };
-  });
+  // wichtig: zuerst echte Ratings für ALLE Offers berechnen
+  const offersWithRatings = await addRatingsToOffers(offers);
 
   const offersWithFavorites = offersWithRatings.map((offer) => {
     return {
@@ -76,16 +94,16 @@ export async function load({ cookies, url }) {
       );
     });
   } else {
-    recommendedOffers = offersWithFavorites;
+    recommendedOffers = sortedOffers;
   }
 
   return {
     user,
 
-    // wichtig: für die Suche alle Offers zurückgeben
+    // SearchBar bekommt jetzt alle Offers mit echten Ratings
     offers: sortedOffers,
 
-    // nur die Cards auf der Startseite kürzen
+    // Startseiten-Cards bleiben begrenzt
     matchingOffers: matchingOffers.slice(0, 6),
     recommendedOffers: recommendedOffers.slice(0, 6),
 
