@@ -22,6 +22,7 @@ export const actions = {
     const data = await request.formData();
 
     const locationChoice = data.get("locationChoice");
+    const hasRequestedLocation = locationChoice === "custom";
 
     const wantsRepeat = data.get("wantsRepeat") === "yes";
     const repeatWeeks = Number(data.get("repeatWeeks") || 1);
@@ -75,11 +76,23 @@ export const actions = {
     let bookingNumber = null;
 
     if (wantsRepeat && repeatWeeks > 1) {
-      bookingId = await db.createRecurringBookingRequest(
+      const createdBooking = await db.createRecurringBookingRequest(
         booking,
         repeatWeeks,
         repeatMessage,
       );
+
+      if (createdBooking) {
+        bookingId = createdBooking.id;
+        bookingNumber = createdBooking.bookingNumber;
+      }
+    } else if (hasRequestedLocation) {
+      const createdBooking = await db.createBookingRequest(booking);
+
+      if (createdBooking) {
+        bookingId = createdBooking.id;
+        bookingNumber = createdBooking.bookingNumber;
+      }
     } else {
       const createdBooking = await db.createBooking(booking);
 
@@ -88,7 +101,6 @@ export const actions = {
         bookingNumber = createdBooking.bookingNumber;
       }
     }
-
     const offer = await db.getOffer(params.offerId);
 
     await db.createNotification({
@@ -96,11 +108,15 @@ export const actions = {
       sender: "System",
       title: wantsRepeat
         ? "Wiederholungsanfrage gesendet"
-        : "Buchung bestätigt",
+        : hasRequestedLocation
+          ? "Standortanfrage gesendet"
+          : "Buchung bestätigt",
       message: wantsRepeat
         ? "Deine Wiederholungsanfrage wurde an den Trainer gesendet."
-        : "Deine Buchung wurde erfolgreich bestätigt.",
-      type: wantsRepeat ? "warning" : "success",
+        : hasRequestedLocation
+          ? `Deine Anfrage für den Wunschstandort ${requestedLocation.name} wurde an den Trainer gesendet.`
+          : "Deine Buchung wurde erfolgreich bestätigt.",
+      type: wantsRepeat || hasRequestedLocation ? "warning" : "success",
       bookingId: bookingId,
       offerId: params.offerId,
       offerTitle: offer.title,

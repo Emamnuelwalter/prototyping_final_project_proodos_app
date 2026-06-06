@@ -401,6 +401,11 @@
                 name="repeatGroupId"
                 value={booking.repeatGroupId}
               />
+              <input
+                type="hidden"
+                name="bookingId"
+                value={booking.repeatBookings[0]._id}
+              />
 
               <button class="btn btn-danger w-100 mt-2" type="submit">
                 Ganze Serie stornieren

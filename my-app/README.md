@@ -46,11 +46,14 @@ Sarah (21) aus Zürich spielt gerne am Wochenende Tennis und möchte ihre Fähig
 
 **Primäre Zielgruppe:**
 
-- Junge Erwachsene im Alter von 18 bis 25 Jahren
-- Studierende im Alter von 18 bis 25 Jahren
-- Leistungssportler im Alter von 16 bis 45 Jahren
-- Profisportler
-- Sporttrainer, z. B. Fitnesstrainer oder Tennistrainer
+Die primäre Zielgruppe von Proodos sind sportinteressierte junge Erwachsene und Erwachsene im Alter von ca. 18 bis 35 Jahren, die flexibel und standortbasiert ein passendes Sporttraining buchen möchten. Dazu gehören vor allem Personen, die ihre Fitness verbessern, eine neue Sportart ausprobieren oder gezielt mit einem Trainer an ihrer Technik arbeiten möchten.
+
+Typische Nutzerinnen und Nutzer sind Studierende, Berufseinsteiger und aktive Freizeit- oder Hobbysportler, die einfache Buchungsprozesse, transparente Angebote und passende Trainings in ihrer Nähe erwarten.
+
+**Sekundäre Zielgruppe:**
+
+- Sporttrainerinnen und Sporttrainer, die ihre Trainingsangebote sichtbar machen und neue Kundinnen und Kunden gewinnen möchten.
+- Fortgeschrittene Sportlerinnen und Sportler, die gezielt nach Techniktraining, Leistungsverbesserung oder spezialisierten Trainings suchen.
 
 **Weitere Stakeholder:**
 
@@ -67,19 +70,15 @@ Trainingseinheiten können flexibel und kurzfristig gebucht sowie über eine Ter
 **Kernfunktionalität:**
 
 - Profilerstellung als Onboarding-Formular
-- Dummy-Login für den Prototyp
+- Login für den Prototyp
 - Profilansicht und Profilbearbeitung
 - Suche nach Sporttrainer/-innen und Trainingsangeboten
 - Empfehlungen auf Basis von Sportart, Niveau und Region
-- Sportkategorien mit passenden Bildern und Piktogrammen
 - Buchungsportal für verfügbare Termine
 - Terminübersicht unter „Meine Termine“
 - Möglichkeit, gebuchte Termine zu stornieren oder zu verschieben
-- Wiederholungsbuchungen für mehrere Trainingswochen
-- Wunschstandort bei der Buchung
-- Kartenansicht mit Trainingsstandorten
 - Benachrichtigungen zu Buchung, Verschiebung und Stornierung
-- Bewertungssystem als vorbereitete Erweiterung
+- Bewertungsansicht für Trainingsangebote
 
 **Workflow:**
 
@@ -90,14 +89,12 @@ Trainingseinheiten können flexibel und kurzfristig gebucht sowie über eine Ter
 5. Der User öffnet die Detailansicht eines Angebots.
 6. Das System zeigt die verfügbaren Termine des Trainers an.
 7. Der User wählt eine verfügbare Trainingsstunde aus.
-8. Optional kann ein Wunschstandort angegeben werden.
-9. Das System prüft, ob der Termin noch verfügbar ist.
-10. Die Buchung wird gespeichert.
-11. Der User erhält eine Bestätigungsseite mit Buchungs-ID.
-12. Der gebuchte Termin wird im Bereich „Meine Termine“ angezeigt.
-13. Der User erhält eine Benachrichtigung zur Buchung.
-14. Der User kann einen Termin bei Bedarf stornieren oder verschieben.
-15. Bei wiederkehrenden Buchungen können einzelne Termine oder eine ganze Serie verwaltet werden.
+8. Das System prüft, ob der Termin noch verfügbar ist.
+9. Die Buchung wird gespeichert.
+10. Der User erhält eine Bestätigungsseite mit Buchungs-ID.
+11. Der gebuchte Termin wird im Bereich „Meine Termine“ angezeigt.
+12. Der User erhält eine Benachrichtigung zur Buchung.
+13. Der User kann einen Termin bei Bedarf stornieren oder verschieben.
 
 <img src="/my-app/static/img/Workflow.drawio.svg" alt="Worflow Prozess" width="400" height="800"/>
 
@@ -118,6 +115,10 @@ Ein eigener Trainerbereich zur Verwaltung von Angeboten, Verfügbarkeiten und Bu
 **Trainerbestätigung:**
 
 Eine manuelle Bestätigung von Buchungsanfragen durch Trainer wurde nicht umgesetzt. Im Prototyp werden Buchungen direkt bestätigt.
+
+**Admin:**
+
+Ein Admin Bereich zur Verwaltung von Angeboten, User und Buchungen wurde im aktuellen Prototyp nicht umgesetzt.
 
 ## 3. Vorgehen & Artefakte
 
@@ -239,7 +240,7 @@ Eine Kartenansicht wurde als sinnvolle Erweiterung identifiziert. Sie verbessert
 
 **Use-Case-Diagramm**
 
-Das Use-Case-Diagramm zeigt die wichtigsten Funktionen der Anwendung und die beteiligten Rollen. Im Mindestumfang liegt der Fokus auf dem User, der ein Profil erstellt, Angebote durchsucht und Termine bucht. Trainer- und Admin-Funktionen sind als mögliche Erweiterungen vorgesehen.
+Das Use-Case-Diagramm zeigt die wichtigsten Funktionen der Anwendung und die beteiligten Rollen. Im Mindestumfang liegt der Fokus auf dem User, der ein Profil erstellt, Angebote durchsucht und Termine bucht. Trainer- und Admin Bereiche werden nicht umgesetzt aber sind bei der nächsten Stufe der Entwicklung der App umgesetzt werden. (Nicht im Prototyp)
 
 <img src="/my-app/static/img/Use Case Diagramm.svg" alt="Use-Case-Diagramm Proodos" width="400" height="auto">
 
@@ -260,11 +261,11 @@ Das Use-Case-Diagramm zeigt die wichtigsten Funktionen der Anwendung und die bet
 
 Die User Journey Map zeigt den Ablauf aus Sicht des Users vom Einstieg bis zur Buchung.
 
-<img src="/my-app/static/img/Proobos User Journey Map.jpg" alt="User Journey Map" width="400" height="auto">
+<img src="/my-app/static/img/proodos_user_journey_map.jpg" alt="User Journey Map" width="400" height="auto">
 
 **Mockup:**
 
-https://www.figma.com/proto/WeAMfqd8XFX7e8SgEoxRPi/Prodos-App-und-Web
+https://www.figma.com/proto/WeAMfqd8XFX7e8SgEoxRPi/Proodos-Web-App
 
 Im Mockup werden auf der Hauptseite Trainingsangebote in der Nähe der Gemeinde des Users angezeigt. Der User kann nach Sportarten, Trainern oder Standorten suchen. Zusätzlich sind Filter vorgesehen, zum Beispiel nach Niveau oder Mindestbewertung.
 
@@ -290,9 +291,9 @@ Termin Auswahl Ansicht
 
 <img src="/my-app/static/img/Screenshots/Kalenderauswahl_desktop.png" alt="Desktop-Kalenderauswahl" width="400" height="auto">
 
-Buchungsbestätigung
+Meine Termine:
 
-<img src="/my-app/static/img/Screenshots/Confromation_page.png" alt="Desktop-Buchungsbestätigung" width="400" height="auto">
+<img src="/my-app/static/img/Screenshots/Meine_Termine Mockup.png" alt="Meine Termine" width="400" height="auto">
 
 ### 3.4 Prototype
 
@@ -302,11 +303,12 @@ Buchungsbestätigung
 
 **Navigationsleiste:**
 
-Nach der Profilerstellung hat der User über die Navigation Zugriff auf die Hauptseite „Angebote“, „Sportkategorien“, „Karte“, „Meine Termine“, „Benachrichtigungen“ und „Mein Profil“. Vor der Anmeldung sind nur die Startseite, Login, Profilerstellung und Info-Seite zugänglich.
+Nach der Profilerstellung hat der User über die Navigation Zugriff auf die Hauptseite „Angebote“, „Sportkategorien“, „Karte“, „Meine Termine“.
+Der Profil-Avatar hat ein Dropdwon bei der der User auf die Seite "Benachrichtigungen", "Mein Profil" und "Info" zugreifen kann.
 
 **Startseite:**
 
-Auf der Startseite wird der User mit einem Karten-Element begrüsst und aufgefordert, ein Profil zu erstellen oder sich einzuloggen.
+Auf der Startseite wird der User mit einem Intro Text begrüsst und aufgefordert, ein Profil zu erstellen oder sich einzuloggen.
 
 **Hauptseite:**
 
@@ -320,11 +322,14 @@ Auf dieser Seite werden weitere Informationen zum Kurs angezeigt, zum Beispiel B
 
 Die Termine werden wie auf der Hauptseite in Karten dargestellt. Die Karten enthalten die wichtigsten Informationen zum Termin. Zusätzlich kann ein Termin verwaltet, verschoben oder storniert werden.
 
-**Karte:**
+**Mein Profil:**
+Auf der Seite mein Profil kann der User sein Profil alle seine Logindaten sehen. Interresierte Sportarten und den Zieltext sieht er ebenfalls auf der Seite.
 
-Die Kartenansicht zeigt Trainingsstandorte im Kanton des Users. Angebote können auf der Karte ausgewählt werden. Die rechte Ergebnisliste zeigt passende Angebote und kann nach Relevanz, Standort, Bewertung, Preis oder nächstem Termin sortiert werden.
+**Karte (Erweiterung):**
 
-**Benachrichtigungen:**
+Die Kartenansicht zeigt Trainingsstandorte von vorgeschlagenen Angeboten mit Ihrem Standort im Kanton des Users. Nach belibigen Angeboten kann gesucht und gefiltert werden in der Ansicht oder in der Karte direkt angewählt werden. Die rechte Ergebnisliste zeigt passende Angebote und kann nach Relevanz, Standort, Bewertung, Preis oder nächstem Termin sortiert werden.
+
+**Benachrichtigungen (Erweiterung):**
 
 Die Benachrichtigungsseite zeigt Systemmeldungen zu Buchungen, Verschiebungen und Stornierungen. Die Nachrichten enthalten u. a. Angebot, Buchungsnummer und Datum.
 
@@ -356,7 +361,7 @@ Die Terminauswahl ist in zwei Schritte aufgeteilt. Der User wählt zuerst einen 
 
 **Terminauswahl:**
 
-Im Mockup war ursprünglich eine Kalenderansicht geplant. Diese Umsetzung wäre technisch aufwändiger gewesen. Deshalb wurde für den Prototyp eine einfachere Lösung mit Datum-Buttons und Uhrzeit-Buttons umgesetzt.
+Im Mockup war ursprünglich eine Kalenderansicht geplant. Diese Umsetzung wäre technisch aufwändiger gewesen. Deshalb wurde für den Prototyp eine einfachere Lösung mit der Bootstap Kalenderauswahl und Uhrzeit-Buttons umgesetzt.
 
 **Profil:**
 
@@ -364,7 +369,7 @@ Das Profil kann im Prototyp bearbeitet werden. Standort, Gemeinde und interessie
 
 **Bewertungen:**
 
-Das Schreiben von Bewertungen ist nicht vollständig implementiert. Bewertungen sind jedoch in den Mockdaten vorbereitet und in der Detailansicht sichtbar.
+Die Implementierung einer Bewertungsansicht wie beim Mockup war nicht möglich. Alternativ musste das Design aufgebaut werden auf einem einfachen minimalistischen Design.
 
 **Kartenansicht:**
 
@@ -432,7 +437,17 @@ Die Kartenansicht zeigt Trainingsstandorte. Marker können ausgewählt werden un
 
 Die Benachrichtigungsseite zeigt Systemmeldungen zu Buchungen, Verschiebungen und Stornierungen.
 
+**Startseite (`/info`):**
+
+Alle Information zum Prototyp bezüglich Funktionen, Datenschutz befinden sich auf dieser Seite.
+
 **Komponenten:**
+
+**ProfileCard und ProfileForm:**
+`my-app/src/lib/components/profile/ProfileCard.svelte`
+`my-app/src/lib/components/profile/ProfileForm.svelte`
+
+Das ProfileForm zeigt das Registierungsformular. Die ProfileCard zeigt die Profildaten unter "Mein Profil"
 
 **OfferCard:**
 
@@ -506,10 +521,10 @@ Ordner: `json_mockdata`
 
 **Wichtige Metadaten zu den Mockdaten:**
 
-- Users und Trainer
+- Users (customers and trainers)
 - Training Locations
-- Trainingsangebote
-- Buchungen
+- Training Offers
+- Buchungen (Nicht wichtig für diesen Prototyp)
 - Bewertungen
 - Benachrichtigungen
 - Favoriten
@@ -547,19 +562,173 @@ https://proodoscoaching.netlify.app/
 - Die App verwendet im Prototyp kein echtes Login, sondern ein vereinfachtes Dummy-Login.
 - Buchungen werden direkt bestätigt.
 - Bereits gebuchte Termine werden bei der Buchung nicht mehr als auswählbare Option angezeigt.
-- Eine vollständige Kalenderansicht wurde zugunsten einer einfacheren Datum- und Uhrzeitauswahl nicht umgesetzt.
+- Eine vollständige Kalenderansicht bei der Auswahl eines Termins wurde zugunsten einer einfacheren Datum- und Uhrzeitauswahl nicht umgesetzt.
 - Bilder werden nicht in MongoDB gespeichert, sondern über Helper-Funktionen anhand der Sportart bzw. des Trainerprofils geladen.
 
 ### 3.5 Validate
 
-- **URL der getesteten Version** (separat deployt)
-- **Ziele der Prüfung:** _[welche Fragen sollen beantwortet werden?]_
-- **Vorgehen:** _[moderiert/unmoderiert; remote/on-site]_
-- **Stichprobe:** _[Mit wem wurde getestet? Profil; Anzahl]_
-- **Aufgaben/Szenarien:** _[Ausformulierte Testaufgaben]_
-- **Kennzahlen & Beobachtungen:** _[z. B. Erfolgsquote, Zeitbedarf, qualitative Findings]_
-- **Zusammenfassung der Resultate:** _[Wichtigste Erkenntnisse; 2-4 Sätze]_
-- **Abgeleitete Verbesserungen:** _[Anforderungen, die als nächstes umgesetzt werden sollten, priorisiert, kurz begründet; falls Verbesserungen im Prototyp konkret umgesetzt wurden: In Kap. 4 dokumentieren]_
+#### URL der getesteten Version
+
+Getestete Version:  
+https://6a0304abf89ffc0008520935--proodoscoaching.netlify.app/
+
+Version: 0.5  
+Datum: 20.05.2026
+
+#### Ziele der Prüfung
+
+Mit der Evaluation wurde geprüft, ob der zentrale Ablauf von Proodos verständlich ist:
+
+- Profil erstellen
+- passende Trainingsangebote finden
+- Detailansicht verstehen
+- Termin buchen
+- gebuchte Termine unter „Meine Termine“ finden und verwalten
+- Unklarheiten und Verbesserungsideen erkennen
+
+#### Vorgehen
+
+Die Evaluation wurde als moderierter Usability-Test vor Ort durchgeführt. Die Testpersonen erhielten ein realistisches Szenario und bearbeiteten mehrere Aufgaben im Prototyp. Währenddessen wurden Beobachtungen, Probleme und Rückmeldungen notiert.
+
+#### Stichprobe
+
+<table>
+  <tr>
+    <th>Testperson</th>
+    <th>Profil</th>
+    <th>Testart</th>
+  </tr>
+  <tr>
+    <td>Liam Reihwald</td>
+    <td>Student, Freizeitsportler</td>
+    <td>1 Usability-Test</td>
+  </tr>
+  <tr>
+    <td>Skender Zenullahu</td>
+    <td>Student, Sportinteressiert</td>
+    <td>1 Usability-Test</td>
+  </tr>
+</table>
+
+#### Aufgaben / Szenarien
+
+**Ausgangslage:**  
+Die Testperson ist Student und Freizeitsportler und möchte im Krafttraining Fortschritte machen. Dafür sucht sie über Proodos einen passenden Trainer und möchte flexibel einen Termin buchen.
+
+**Aufgabe 1:**  
+Ein Profil erstellen, damit passende Sportangebote angezeigt werden.
+
+**Aufgabe 2:**  
+Ein passendes Trainingsangebot suchen und die Detailansicht prüfen.
+
+**Aufgabe 3:**  
+Einen Termin buchen und diesen anschliessend unter „Meine Termine“ verwalten.
+
+#### Kennzahlen & Beobachtungen
+
+<table>
+  <tr>
+    <th>Aufgabe</th>
+    <th>Erfolgsquote</th>
+    <th>Beobachtung</th>
+  </tr>
+  <tr>
+    <td>Profil erstellen</td>
+    <td>2/2</td>
+    <td>Die Registrierung wurde als einfach und schnell wahrgenommen.</td>
+  </tr>
+  <tr>
+    <td>Angebot finden</td>
+    <td>2/2</td>
+    <td>Die Darstellung der Sportangebote war übersichtlich und verständlich.</td>
+  </tr>
+  <tr>
+    <td>Detailansicht prüfen</td>
+    <td>2/2</td>
+    <td>Die wichtigsten Informationen zum Angebot wurden gefunden. Trainerprofile könnten jedoch mehr Informationen enthalten.</td>
+  </tr>
+  <tr>
+    <td>Termin buchen</td>
+    <td>2/2</td>
+    <td>Die Terminbuchung war unkompliziert.</td>
+  </tr>
+  <tr>
+    <td>Termin verwalten</td>
+    <td>2/2</td>
+    <td>Der Bereich „Meine Termine“ war leicht verständlich. Verschieben und Stornieren wurden gefunden.</td>
+  </tr>
+</table>
+
+**Positive Rückmeldungen:**
+
+- Einfache und schnelle Registrierung
+- Übersichtliche Darstellung der Sportangebote
+- Moderne Benutzeroberfläche
+- Unkomplizierte Terminbuchung
+- Bereich „Meine Termine“ ist leicht verständlich
+
+**Probleme / Unklarheiten:**
+
+- Trainerprofile könnten mehr Informationen enthalten.
+- Filtermöglichkeiten könnten erweitert werden.
+- Mehr Trainerbewertungen wären hilfreich.
+- Bei mehreren Angeboten wäre eine bessere Eingrenzung der Suche sinnvoll.
+
+**Neue Ideen / Anforderungen aus dem Test:**
+
+- Favoritenfunktion für interessante Trainer oder Angebote
+- Mehr Trainerbewertungen anzeigen
+- Erweiterte Filter nach Sportart, Niveau, Preis oder Bewertung
+- Trainerprofile mit mehr Informationen ergänzen
+
+#### Zusammenfassung der Resultate
+
+Die Evaluation zeigte, dass der zentrale Ablauf von Proodos grundsätzlich funktioniert. Beide Testpersonen konnten ein Profil erstellen, Angebote finden, einen Termin buchen und diesen unter „Meine Termine“ verwalten. Positiv bewertet wurden vor allem die einfache Registrierung, die moderne Oberfläche, die übersichtliche Darstellung der Angebote und die unkomplizierte Terminbuchung. Verbesserungsbedarf besteht vor allem bei ausführlicheren Trainerprofilen, erweiterten Filtermöglichkeiten und mehr sichtbaren Bewertungen.
+
+#### Abgeleitete Verbesserungen
+
+<table>
+  <tr>
+    <th>Priorität</th>
+    <th>Verbesserung</th>
+    <th>Begründung</th>
+  </tr>
+  <tr>
+    <td>Hoch</td>
+    <td>Trainerprofile erweitern</td>
+    <td>Testfeedback zeigte, dass mehr Informationen zu Trainern hilfreich wären.</td>
+  </tr>
+  <tr>
+    <td>Hoch</td>
+    <td>Filtermöglichkeiten erweitern</td>
+    <td>Nutzende möchten Angebote gezielter nach Sportart, Niveau, Preis oder Bewertung eingrenzen.</td>
+  </tr>
+  <tr>
+    <td>Mittel</td>
+    <td>Mehr Trainerbewertungen anzeigen</td>
+    <td>Bewertungen helfen dabei, Vertrauen in ein Angebot aufzubauen.</td>
+  </tr>
+  <tr>
+    <td>Mittel</td>
+    <td>Favoritenfunktion ergänzen</td>
+    <td>Interessante Angebote oder Trainer sollen einfacher wiedergefunden werden.</td>
+  </tr>
+  <tr>
+    <td>Tief</td>
+    <td>Darstellung der Angebotskarten weiter optimieren</td>
+    <td>Die Karten waren verständlich, könnten bei vielen Informationen aber noch übersichtlicher gestaltet werden.</td>
+  </tr>
+</table>
+
+Ein Teil dieser Erkenntnisse wurde später im Prototyp weitergedacht oder umgesetzt, zum Beispiel durch zusätzliche Funktionen zur besseren Verwaltung und Orientierung. Diese späteren Erweiterungen werden im Kapitel Prototype bzw. in der Beschreibung der umgesetzten Funktionen dokumentiert.
+
+#### Issue Map
+
+Zur Auswertung der Usability-Tests wurde eine Issue Map erstellt. Darin wurden die wichtigsten Arbeitsschritte des getesteten Prototyps als Screenshots dargestellt und die Beobachtungen der Testpersonen den jeweiligen Schritten zugeordnet.
+
+Die wichtigsten Issues betrafen Trainerprofile, Filtermöglichkeiten, Trainerbewertungen und das Wiederfinden interessanter Angebote.
+
+<img src="./static/img/issue_map_proodos.jpg" alt="Issue Map der Usability Evaluation" width="400" height="auto">
 
 ## 4. Erweiterungen [Optional]
 
@@ -612,7 +781,7 @@ https://proodoscoaching.netlify.app/
   - **Backend:** Toggle-Funktion über Server Actions
   - **Datenbank:** Collection `favorites`
 - **Referenz:** Angebotsübersicht und Kartenansicht
-- **Aus Evaluation abgeleitet?:** Nein, als zusätzliche Komfortfunktion umgesetzt.
+- **Aus Evaluation abgeleitet?:** Teilweise, Funktion war schon in der Planung als Erweiterung.
 
 ### 4.6 Erweiterte Suche und Filter
 
@@ -647,8 +816,8 @@ Die folgende Deklaration ist verpflichtend und beschreibt den Einsatz von KI im 
 ### 6.1 KI-Tools
 
 - **Eingesetzte Tools:** ChatGPT wurde zur Unterstützung bei Konzeption, Programmierung, Fehlersuche, Refactoring, Mockdaten und Dokumentation eingesetzt.
-- **Zweck & Umfang:** 
-Bearbeitung mit KI: 
+- **Zweck & Umfang:**
+  Bearbeitung mit KI:
 - Karten Logik
 - Login Logik
 - Booking Logik
@@ -658,12 +827,12 @@ Bearbeitung mit KI:
 - Terminauswahl Logik (inkl. Verschiebung, Stornierung)
 - Load-Funktionen asynchrone Funktionen im Backend bei Routen.
 
-Zudem wurde KI für die Strukturierung und sprachliche Überarbeitung der Dokumentation sowie für Mockdaten und Bild-/Asset-Planung verwendet. Die Erweiterung im UI mit CSS im ganzen Prototyp wurde mit KI gemacht.
+Zudem wurde KI für die Strukturierung und sprachliche Überarbeitung der Dokumentation sowie für Mockdaten und Bild-/Asset-Planung verwendet. Die Erweiterung im UI mit CSS im ganzen Prototyp wurde mit KI gemacht. Zudem wurde KI als Unterstützung genutzt, um bestehende Ansätze zu verbessern und zu erweitern, Fehler zu analysieren und komplexere Logik effizienter umzusetzen.
 
-- **Eigene Leistung (Abgrenzung):** 
+- **Eigene Leistung (Abgrenzung):**
 - Die Grundidee (Business Case und USP)
-- Use Cases 
-- die Datenstruktur 
+- Use Cases
+- die Datenstruktur
 - die Funktionsauswahl
 - Routing-Pages
 - das Layout
@@ -675,30 +844,27 @@ Zudem wurde KI für die Strukturierung und sprachliche Überarbeitung der Dokume
 - Meine Termine Page
 - Sportkategorien
 
-KI wurde als Unterstützung genutzt, um bestehende Ansätze zu verbessern und zu erweitern, Fehler zu analysieren und komplexere Logik effizienter umzusetzen.
-
 ### 6.2 Prompt-Vorgehen
 
 Die Prompts wurden meistens anhand konkreter Probleme formuliert. Dazu wurden Codeausschnitte, Fehlermeldungen oder konkrete Anforderungen angegeben. Die KI-Antworten wurden geprüft, angepasst und schrittweise in den bestehenden Code integriert. Besonders bei technischen Problemen wurde iterativ gearbeitet: Fehler testen, Fehlermeldung analysieren, Lösungsvorschlag prüfen und anschliessend im Prototyp anpassen.
 
 ### 6.3 Reflexion
 
-Die Nutzung der Proobos App dient hauptsächlich in einem Prototyp zu demonstrieren, wie eine Vermittlungswebseite von Sporttrainer aussieht und funktioniert. Wie die einzelnen Problemfälle gelöst werden mit dieser App. Einerseits sehen Kunden Angebote in Ihrer Gemeinde Region, für die Sie sich interessieren und können direkt einsehen, wenn Termine gebucht werden können. Auch sehen Kunden Bewertungen, die Ihnen helfen ihre Entscheidung zu treffen. Die App gibt Kunden die Flexibilität Sportangebote, für die Sie sich interessieren, in wenigen Klicks zu buchen. 
+Die Nutzung der Proodos App dient hauptsächlich in einem Prototyp zu demonstrieren, wie eine Vermittlungswebseite von Sporttrainer aussieht und funktioniert. Wie die einzelnen Problemfälle gelöst werden mit dieser App. Einerseits sehen Kunden Angebote in Ihrer Gemeinde Region, für die Sie sich interessieren und können direkt einsehen, wenn Termine gebucht werden können. Auch sehen Kunden Bewertungen, die Ihnen helfen ihre Entscheidung zu treffen. Die App gibt Kunden die Flexibilität Sportangebote, für die Sie sich interessieren, in wenigen Klicks zu buchen.
 
-Die Version 1.0 hat schon einige Features, die direkt übernommen werden können und nicht mehr erweitert werden müssen. Diese Funktionen sind die Kartenfunktion, Terminauswahl, Buchung eines Termines, Verwalten von Terminen in «Meine Termine». Das Profil kann auch nach der Registrierung angepasst werden und bleibt somit dynamisch. 
+Die Version 1.0 hat schon einige Features, die direkt übernommen werden können und nicht mehr erweitert werden müssen. Diese Funktionen sind die Kartenfunktion, Terminauswahl, Buchung eines Termines, Verwalten von Terminen in «Meine Termine». Das Profil kann auch nach der Registrierung angepasst werden und bleibt somit dynamisch.
 
-Es ist aber zu bedenken, dass die App ein Frontend für das Profil eines Trainers braucht. Dies existiert noch nicht. Dies ist eine Erweiterung, die z.b nach einer erfolgreichen Testphase der Kundenansicht mit den «Mock Daten» gemacht wird. Auch gibt es noch keine Schnittstelle eines Zahlungsterminals und eines E-Mail-Servers, der automatische Bestätigungsnachrichten an Kunden sendet. Auch ein Admin-Frontend, das alle Ereignisse über alle Akteure hinwegsehen kann, wurde in diesem Prototyp auch nicht entwickelt. 
+Es ist aber zu bedenken, dass die App ein Frontend für das Profil eines Trainers braucht. Dies existiert noch nicht. Dies ist eine Erweiterung, die z.b nach einer erfolgreichen Testphase der Kundenansicht mit den «Mock Daten» gemacht wird. Auch gibt es noch keine Schnittstelle eines Zahlungsterminals und eines E-Mail-Servers, der automatische Bestätigungsnachrichten an Kunden sendet. Auch ein Admin-Frontend, das alle Ereignisse über alle Akteure hinwegsehen kann, wurde in diesem Prototyp auch nicht entwickelt.
 
-Bezüglich zum Datenschutz ist Folgendes zu bedenken. Im Prototyp der Proobos App werden Test-User angewiesen unbedingt keine realen Daten einzugeben, denn die Logindaten werden nicht sicherheitskonform gespeichert. Es gibt keine «SHA Hashing» der Passwörter im Backend der MongoDB. Dies ist ebenfalls eine Erweiterung, die gemacht werden müsste nach einem erfolgreichen «Acceptability Test» der Stakeholder und Test-User.
+Für eine Umfangreiche App sollte die Datebankarchitektur nochmals im Detail angepasst werden, damit die Performance in der App bessser werden kann. Die Laden der Daten direkt aus der MongoDB Datenbank muss vor der Entwicklung einer Beta-Version nochmals berücksichtigt werden.
 
+Bezüglich zum Datenschutz ist Folgendes zu bedenken. Im Prototyp der Proodos App werden Test-User angewiesen unbedingt keine realen Daten einzugeben, denn die Logindaten werden nicht sicherheitskonform gespeichert. Es gibt keine «SHA Hashing» der Passwörter im Backend der MongoDB. Dies ist ebenfalls eine Erweiterung, die gemacht werden müsste nach einem erfolgreichen «Acceptability Test» der Stakeholder und Test-User.
 
 ## 7. Anhang [Optional]
 
 **Quellen:**
 
-- Figma Mockup: https://www.figma.com/proto/WeAMfqd8XFX7e8SgEoxRPi/Prodos-App-und-Web
+- Figma Mockup: https://www.figma.com/proto/WeAMfqd8XFX7e8SgEoxRPi/Proodos-App-und-Web
 - User Journey Map: https://miro.com/app/board/uXjVHWN_yek=/?share_link_id=313710122623
-- Deployment: https://prooboscoachingapp1.netlify.app/
-
-- **Testskript & Materialien:** _[Link/Datei]_
-- **Rohdaten/Auswertung:** _[Link/Datei]_
+- Deployment: https://proodoscoaching.netlify.app/
+- Issue Map: https://miro.com/app/board/uXjVHP-mc_8=/?share_link_id=9169119785

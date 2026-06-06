@@ -52,16 +52,20 @@ export const actions = {
     const repeatGroupId = data.get("repeatGroupId");
 
     if (repeatGroupId) {
+      const booking = bookingId ? await db.getBooking(bookingId) : null;
+
       await db.deleteBookingSeries(repeatGroupId, userId);
 
       await db.createNotification({
         userId: userId,
         sender: "System",
         title: "Wiederholungsserie storniert",
-        message: "Deine Wiederholungsserie wurde storniert.",
+        message: `Deine Wiederholungsserie${booking?.offer?.title ? ` für "${booking.offer.title}"` : ""} wurde storniert.`,
         type: "danger",
-        bookingId: null,
-        offerId: null,
+        bookingId: bookingId,
+        offerId: booking?.offerId,
+        offerTitle: booking?.offer?.title,
+        bookingNumber: booking?.bookingNumber,
       });
 
       throw redirect(303, "/appointments");
@@ -85,6 +89,8 @@ export const actions = {
       type: "danger",
       bookingId: bookingId,
       offerId: booking?.offerId,
+      offerTitle: booking?.offer?.title,
+      bookingNumber: booking?.bookingNumber,
     });
 
     throw redirect(303, "/appointments");

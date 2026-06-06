@@ -40,6 +40,7 @@ export const actions = {
     }
 
     const updatedUser = {
+      username: data.get("username"),
       firstname: data.get("firstname"),
       lastname: data.get("lastname"),
       birthday: data.get("birthday"),
@@ -52,12 +53,19 @@ export const actions = {
       goal: data.get("goal"),
     };
 
+    const password = data.get("password");
+
+    if (password && password.trim() !== "") {
+      updatedUser.password = password.trim();
+    }
+
     if (
+      !updatedUser.username ||
       !updatedUser.firstname ||
       !updatedUser.lastname ||
       !updatedUser.email ||
-      !updatedUser.gender||
-      !updatedUser.canton||
+      !updatedUser.gender ||
+      !updatedUser.canton ||
       !updatedUser.municipality
     ) {
       return fail(400, {

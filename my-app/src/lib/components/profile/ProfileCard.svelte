@@ -136,6 +136,19 @@
           />
         </div>
 
+        {#if editMode}
+          <div class="col-md-6 mb-3">
+            <label for="password" class="form-label">Neues Passwort</label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              class="form-control"
+              placeholder="Nur ausfüllen, wenn ändern"
+            />
+          </div>
+        {/if}
+
         <div class="row">
           <div class="col-md-6 mb-3">
             <label for="firstname" class="form-label">Vorname</label>
